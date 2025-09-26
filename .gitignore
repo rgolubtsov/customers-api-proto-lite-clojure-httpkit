@@ -1,3 +1,16 @@
+#
+# .gitignore
+# =============================================================================
+# Customers API Lite microservice prototype (Clojure port). Version 0.0.1
+# =============================================================================
+# A daemon written in Clojure, designed and intended to be run
+# as a microservice, implementing a special Customers API prototype
+# with a smart yet simplified data scheme.
+#
+# This is the configuration of the project Git ignorables,
+# i.e. objects that should not be put into the repository.
+#
+
 pom.xml
 pom.xml.asc
 *.jar
@@ -12,3 +25,5 @@ pom.xml.asc
 .lein-failures
 .nrepl-port
 .cpcache/
+
+# vim:set nu et ts=4 sw=4:
