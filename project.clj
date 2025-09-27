@@ -21,9 +21,14 @@
         [org.clojure/clojure "1.12.3"]
         [http-kit            "2.8.1" ]
     ]
-    :main            api-lite.core
+    :main ^:skip-aot api-lite.core
     :target-path     "target/%s"
-    :profiles        {:uberjar {:aot :all}}
+    :profiles {
+        :uberjar {
+            :aot :all
+            :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+        }
+    }
 )
 
 ; vim:set nu et ts=4 sw=4:
