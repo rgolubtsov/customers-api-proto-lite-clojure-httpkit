@@ -69,6 +69,20 @@ Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/api-lite-0
 
 ## Running
 
+**Run** the microservice using **Leiningen** (recompiling sources on-the-fly, if required):
+
+```
+$ lein run; echo $?
+...
+```
+
+**Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task:
+
+```
+$ java -jar target/uberjar/api-lite-0.0.1-standalone.jar; echo $?
+...
+```
+
 **TBD** :cd:
 
 ## Consuming
