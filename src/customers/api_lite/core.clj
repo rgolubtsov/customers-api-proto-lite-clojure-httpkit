@@ -1,5 +1,5 @@
 ;
-; src/api_lite/core.clj
+; src/customers/api_lite/core.clj
 ; =============================================================================
 ; Customers API Lite microservice prototype (Clojure port). Version 0.0.1
 ; =============================================================================
@@ -10,7 +10,7 @@
 ; (See the LICENSE file at the top of the source tree.)
 ;
 
-(ns api-lite.core
+(ns customers.api-lite.core
     "The main namespace of the daemon."
 
     (:gen-class)

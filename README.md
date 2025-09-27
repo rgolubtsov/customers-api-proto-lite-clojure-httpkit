@@ -49,20 +49,12 @@ $ sudo pacman -Syu jdk21-openjdk leiningen make docker
 $ lein clean
 $
 $ lein compile :all
-Retrieving org/clojure/clojure/1.12.3/clojure-1.12.3.pom from central
-Retrieving http-kit/http-kit/2.8.1/http-kit-2.8.1.pom from clojars
-Retrieving nrepl/nrepl/1.0.0/nrepl-1.0.0.pom from clojars
-Retrieving org/nrepl/incomplete/0.1.0/incomplete-0.1.0.pom from clojars
-Retrieving org/clojure/clojure/1.12.3/clojure-1.12.3.jar from central
-Retrieving org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar from clojars
-Retrieving http-kit/http-kit/2.8.1/http-kit-2.8.1.jar from clojars
-Retrieving nrepl/nrepl/1.0.0/nrepl-1.0.0.jar from clojars
-Compiling api-lite.core
+Compiling customers.api-lite.core
 $
 $ lein uberjar
-Compiling api-lite.core
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/api-lite-0.0.1.jar
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/api-lite-0.0.1-standalone.jar
+Compiling customers.api-lite.core
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.1.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.1-standalone.jar
 ```
 
 **TBD** :cd:
@@ -79,14 +71,14 @@ $ lein run; echo $?
 **Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task:
 
 ```
-$ java -jar target/uberjar/api-lite-0.0.1-standalone.jar; echo $?
+$ java -jar target/uberjar/customers-api-lite-0.0.1-standalone.jar; echo $?
 ...
 ```
 
 To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
 
 ```
-$ java -jar target/uberjar/api-lite-0.0.1-standalone.jar > /dev/null 2>&1 &
+$ java -jar target/uberjar/customers-api-lite-0.0.1-standalone.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 

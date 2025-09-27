@@ -10,7 +10,7 @@
 ; (See the LICENSE file at the top of the source tree.)
 ;
 
-(defproject api-lite "0.0.1"
+(defproject customers-api-lite "0.0.1"
     :description     "Customers API Lite microservice prototype."
     :url             "https://github.com/rgolubtsov/customers-api-proto-lite-clojure-httpkit"
     :license {
@@ -21,7 +21,7 @@
         [org.clojure/clojure "1.12.3"]
         [http-kit            "2.8.1" ]
     ]
-    :main ^:skip-aot api-lite.core
+    :main ^:skip-aot customers.api-lite.core
     :target-path     "target/%s"
     :profiles {
         :uberjar {
