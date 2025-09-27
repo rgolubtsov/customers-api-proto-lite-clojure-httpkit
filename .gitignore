@@ -11,19 +11,4 @@
 # i.e. objects that should not be put into the repository.
 #
 
-pom.xml
-pom.xml.asc
-*.jar
-*.class
-/lib/
-/classes/
-/target/
-/checkouts/
-.lein-deps-sum
-.lein-repl-history
-.lein-plugins/
-.lein-failures
-.nrepl-port
-.cpcache/
-
 # vim:set nu et ts=4 sw=4:
