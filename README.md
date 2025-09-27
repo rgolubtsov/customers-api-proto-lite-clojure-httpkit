@@ -83,7 +83,12 @@ $ java -jar target/uberjar/api-lite-0.0.1-standalone.jar; echo $?
 ...
 ```
 
-**TBD** :cd:
+To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
+
+```
+$ java -jar target/uberjar/api-lite-0.0.1-standalone.jar > /dev/null 2>&1 &
+[1] <pid>
+```
 
 ## Consuming
 
