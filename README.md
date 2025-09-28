@@ -63,7 +63,16 @@ Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-
 Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.1-standalone.jar
 ```
 
-**TBD** :cd:
+Or **build** the microservice using **GNU Make** (optional, but for convenience &mdash; it covers the same **Leiningen** build workflow under the hood):
+
+```
+$ make clean
+...
+$ make      # <== Compilation only phase (JVM classes).
+...
+$ make all  # <== Building the daemon (executable JAR bundle).
+...
+```
 
 ## Running
 
