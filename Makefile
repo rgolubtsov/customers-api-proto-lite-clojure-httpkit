@@ -18,7 +18,8 @@ JAR     = $(SRV)/$(UBERJAR)
 LEIN   = lein
 LFLAGS = compile :all
 
-MV = mv
+MV   = mv
+UNXZ = unxz
 
 # Making the first target (JVM classes).
 $(SRV):
@@ -31,7 +32,11 @@ $(JAR):
 	DMN_VERSION="0.0.1"; \
 	SIMPLE_JAR="$(JAR)/$${DAEMON_NAME}-$${DMN_VERSION}.jar"; \
 	BUNDLE_JAR="$(JAR)/$${DAEMON_NAME}-$${DMN_VERSION}-standalone.jar"; \
-	$(RM) $${SIMPLE_JAR} && $(MV) $${BUNDLE_JAR} $${SIMPLE_JAR}
+	$(RM) $${SIMPLE_JAR} && $(MV) $${BUNDLE_JAR} $${SIMPLE_JAR} && \
+	DB_DIR="data/db"; \
+	if [ -f $${DB_DIR}/$${DAEMON_NAME}.db.xz ]; then \
+	   $(UNXZ) $${DB_DIR}/$${DAEMON_NAME}.db.xz; \
+	fi
 
 .PHONY: all clean
 

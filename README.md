@@ -50,6 +50,7 @@ $ lein clean
 $
 $ lein compile :all
 Compiling customers.api-lite.core
+Compiling customers.api-lite.helper
 $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
@@ -57,8 +58,13 @@ $ lein uberjar && \
   DMN_VERSION="0.0.1"; \
   SIMPLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}.jar"; \
   BUNDLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}-standalone.jar"; \
-  rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR}
+  rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR} && \
+  DB_DIR="data/db"; \
+  if [ -f ${DB_DIR}/${DAEMON_NAME}.db.xz ]; then \
+     unxz ${DB_DIR}/${DAEMON_NAME}.db.xz; \
+  fi
 Compiling customers.api-lite.core
+Compiling customers.api-lite.helper
 Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.1.jar
 Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.1-standalone.jar
 ```
