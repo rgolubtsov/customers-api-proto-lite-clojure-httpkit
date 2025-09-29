@@ -55,7 +55,7 @@ $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
   DAEMON_NAME="customers-api-lite"; \
-  DMN_VERSION="0.0.1"; \
+  DMN_VERSION="0.0.2"; \
   SIMPLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}.jar"; \
   BUNDLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}-standalone.jar"; \
   rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR} && \
@@ -65,8 +65,8 @@ $ lein uberjar && \
   fi
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.1.jar
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.1-standalone.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.2.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.2-standalone.jar
 ```
 
 Or **build** the microservice using **GNU Make** (optional, but for convenience &mdash; it covers the same **Leiningen** build workflow under the hood):
@@ -92,14 +92,14 @@ $ lein run; echo $?
 **Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.0.1.jar; echo $?
+$ java -jar target/uberjar/customers-api-lite-0.0.2.jar; echo $?
 ...
 ```
 
 To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.0.1.jar > /dev/null 2>&1 &
+$ java -jar target/uberjar/customers-api-lite-0.0.2.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 
