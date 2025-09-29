@@ -14,4 +14,7 @@
 # === JVM classes and JARs ====================================================
 target/
 
+# === Uncompressed databases ==================================================
+*.db
+
 # vim:set nu et ts=4 sw=4:
