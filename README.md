@@ -89,7 +89,7 @@ $ lein run; echo $?
 ...
 ```
 
-**Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task:
+**Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task or GNU Make's `all` target:
 
 ```
 $ java -jar target/uberjar/customers-api-lite-0.0.2.jar; echo $?
