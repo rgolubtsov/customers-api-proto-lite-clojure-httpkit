@@ -27,4 +27,11 @@
     ))
 )
 
+; Helper function. Makes final cleanups, closes streams, etc.
+(defn -cleanup [s]
+    ; Closing the system logger.
+    ; Calling <syslog.h> closelog();
+    (.shutdown s)
+)
+
 ; vim:set nu et ts=4 sw=4:

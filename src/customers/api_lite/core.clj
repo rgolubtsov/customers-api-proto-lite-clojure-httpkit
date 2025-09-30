@@ -33,9 +33,7 @@
 
     (-dbg dbg s (str (O_BRACKET) (DAEMON_NAME) (C_BRACKET)))
 
-    ; Closing the system logger.
-    ; Calling <syslog.h> closelog();
-    (.shutdown s))))
+    (-cleanup s))))
 )
 
 ; vim:set nu et ts=4 sw=4:
