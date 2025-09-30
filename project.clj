@@ -18,15 +18,20 @@
         :url  "https://raw.githubusercontent.com/rgolubtsov/customers-api-proto-lite-clojure-httpkit/main/LICENSE"
     }
     :dependencies [
-        [org.clojure/clojure "1.12.3"]
-        [http-kit            "2.8.1" ]
+        [org.clojure/clojure       "1.12.3"]
+        [org.clojure/tools.logging "1.3.0" ]
+        [org.slf4j/slf4j-reload4j  "2.0.17"]
+        [http-kit                  "2.8.1" ]
     ]
     :main ^:skip-aot customers.api-lite.core
     :target-path     "target/%s"
     :profiles {
         :uberjar {
             :aot :all
-            :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+            :jvm-opts [
+                "-Dclojure.compiler.direct-linking=true"
+                "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/slf4j-factory"
+            ]
         }
     }
 )
