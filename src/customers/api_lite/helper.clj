@@ -20,10 +20,11 @@
 (defmacro DAEMON_NAME "The daemon name." [] "Customers API Lite")
 
 ; Helper function. Used to log messages for debugging aims in a free form.
-(defn -dbg [dbg message]
-    (if dbg
-        (l/debug message)
-    )
+(defn -dbg [dbg s message]
+    (if dbg (do
+        (l/debug  message)
+        (.debug s message)
+    ))
 )
 
 ; vim:set nu et ts=4 sw=4:

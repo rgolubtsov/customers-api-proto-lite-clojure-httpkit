@@ -11,7 +11,10 @@
 ;
 
 (ns customers.api-lite.core "The main namespace of the daemon." (:gen-class)
-    (:use [customers.api-lite.helper]))
+    (:use    [customers.api-lite.helper])
+    (:import (org.graylog2.syslog4j.impl.unix UnixSyslogConfig)
+             (org.graylog2.syslog4j.impl.unix UnixSyslog      )
+             (org.graylog2.syslog4j           SyslogIF        )))
 
 (defn -main
     "The microservice entry point.
@@ -22,7 +25,17 @@
 
     (let [dbg true]
 
-    (-dbg dbg (str (O_BRACKET) (DAEMON_NAME) (C_BRACKET))))
+    ; Opening the system logger.
+    ; Calling <syslog.h> openlog(NULL, LOG_CONS | LOG_PID, LOG_DAEMON);
+    (let [cfg (UnixSyslogConfig.)]
+    (.setIdent cfg nil) (.setFacility cfg SyslogIF/FACILITY_DAEMON)
+    (let [s (UnixSyslog.)] (.initialize s SyslogIF/UNIX_SYSLOG cfg)
+
+    (-dbg dbg s (str (O_BRACKET) (DAEMON_NAME) (C_BRACKET)))
+
+    ; Closing the system logger.
+    ; Calling <syslog.h> closelog();
+    (.shutdown s))))
 )
 
 ; vim:set nu et ts=4 sw=4:
