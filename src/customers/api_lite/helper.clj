@@ -10,12 +10,20 @@
 ; (See the LICENSE file at the top of the source tree.)
 ;
 
-(ns customers.api-lite.helper "The helper namespace for the daemon.")
+(ns customers.api-lite.helper "The helper namespace for the daemon."
+    (:require [clojure.tools.logging :as l]))
 
 ; Helper constants.
 (defmacro O_BRACKET [] "[")
 (defmacro C_BRACKET [] "]")
 
 (defmacro DAEMON_NAME "The daemon name." [] "Customers API Lite")
+
+; Helper function. Used to log messages for debugging aims in a free form.
+(defn -dbg [dbg message]
+    (if dbg
+        (l/debug message)
+    )
+)
 
 ; vim:set nu et ts=4 sw=4:
