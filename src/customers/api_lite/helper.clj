@@ -19,10 +19,12 @@
 (defmacro O-BRACKET [] "[")
 (defmacro C-BRACKET [] "]")
 
+; Common notification messages.
+(defmacro MSG-SERVER-STARTED [] "Server started on port ")
+(defmacro MSG-SERVER-STOPPED [] "Server stopped")
+
 (defmacro SETTINGS "The filename of the daemon settings
     (in edn (Extensible Data Notation) format)." [] "settings.conf")
-
-(defmacro DAEMON-NAME "The daemon name." [] "Customers API Lite")
 
 ; Helper function. Used to get the daemon settings.
 (defn -get-settings [] (edn/read-string (slurp (io/resource (SETTINGS)))))
@@ -37,6 +39,9 @@
 
 ; Helper function. Makes final cleanups, closes streams, etc.
 (defn -cleanup [s]
+    (l/info  (MSG-SERVER-STOPPED))
+    (.info s (MSG-SERVER-STOPPED))
+
     ; Closing the system logger.
     ; Calling <syslog.h> closelog();
     (.shutdown s)
