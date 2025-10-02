@@ -130,7 +130,9 @@ The microservice has the ability to log messages to a logfile and to the Unix sy
 
 ```
 $ tail -f log/customers-api-lite.log
-[2025-10-02][13:40:10] [DEBUG] [Customers API Lite]
+[2025-10-03][02:00:10] [DEBUG] [Customers API Lite]
+[2025-10-03][02:00:10] [INFO ] Server started on port 8765
+[2025-10-03][02:00:10] [INFO ] Server stopped
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -138,7 +140,9 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Oct 02 13:40:10 <hostname> java[<pid>]: [Customers API Lite]
+Oct 03 02:00:10 <hostname> java[<pid>]: [Customers API Lite]
+Oct 03 02:00:10 <hostname> java[<pid>]: Server started on port 8765
+Oct 03 02:00:10 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:
