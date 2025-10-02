@@ -16,13 +16,13 @@
               [clojure.edn           :as edn]))
 
 ; Helper constants.
-(defmacro O_BRACKET [] "[")
-(defmacro C_BRACKET [] "]")
+(defmacro O-BRACKET [] "[")
+(defmacro C-BRACKET [] "]")
 
 (defmacro SETTINGS "The filename of the daemon settings
     (in edn (Extensible Data Notation) format)." [] "settings.conf")
 
-(defmacro DAEMON_NAME "The daemon name." [] "Customers API Lite")
+(defmacro DAEMON-NAME "The daemon name." [] "Customers API Lite")
 
 ; Helper function. Used to get the daemon settings.
 (defn -get-settings [] (edn/read-string (slurp (io/resource (SETTINGS)))))

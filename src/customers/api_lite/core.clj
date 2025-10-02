@@ -26,7 +26,7 @@
     ; Getting the daemon settings.
     (let [settings (-get-settings)]
 
-    (println (str (O_BRACKET) settings (C_BRACKET))))
+    (println (str (O-BRACKET) settings (C-BRACKET))))
 
     (let [dbg true]
 
@@ -36,7 +36,7 @@
     (.setIdent cfg nil) (.setFacility cfg SyslogIF/FACILITY_DAEMON)
     (let [s (UnixSyslog.)] (.initialize s SyslogIF/UNIX_SYSLOG cfg)
 
-    (-dbg dbg s (str (O_BRACKET) (DAEMON_NAME) (C_BRACKET)))
+    (-dbg dbg s (str (O-BRACKET) (DAEMON-NAME) (C-BRACKET)))
 
     (-cleanup s))))
 )
