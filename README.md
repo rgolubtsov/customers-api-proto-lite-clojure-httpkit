@@ -35,7 +35,7 @@ Surely, one may consider this project to be suitable for a wide variety of appli
 
 ## Building
 
-The microservice might be built and run under **Arch Linux**. &mdash; First install the necessary dependencies (`jdk21-openjdk`, `leiningen`, `make`, `docker`):
+The microservice might be built and run under **Arch Linux** (proven). &mdash; First install the necessary dependencies (`jdk21-openjdk`, `leiningen`, `make`, `docker`):
 
 ```
 $ sudo pacman -Syu jdk21-openjdk leiningen make docker
@@ -126,7 +126,7 @@ No. | Endpoint name                                      | Request method and RE
 
 ### Logging
 
-The microservice has the ability to log messages to a logfile and to the Unix syslog facility... When running under Arch Linux (not in a Docker container), logs can be seen and analyzed in an ordinary fashion, by `tail`ing the `log/customers-api-lite.log` logfile:
+The microservice has the ability to log messages to a logfile and to the Unix syslog facility. To enable debug logging, the `:logger.debug.enabled` setting in the microservice main config file `resources/settings.conf` should be set to `true` *before building the microservice*. When running under Arch Linux (not in a Docker container), logs can be seen and analyzed in an ordinary fashion, by `tail`ing the `log/customers-api-lite.log` logfile:
 
 ```
 $ tail -f log/customers-api-lite.log
