@@ -11,13 +11,21 @@
 ;
 
 (ns customers.api-lite.helper "The helper namespace for the daemon."
-    (:require [clojure.tools.logging :as l]))
+    (:require [clojure.tools.logging :as l  ]
+              [clojure.java.io       :as io ]
+              [clojure.edn           :as edn]))
 
 ; Helper constants.
 (defmacro O_BRACKET [] "[")
 (defmacro C_BRACKET [] "]")
 
+(defmacro SETTINGS "The filename of the daemon settings
+    (in edn (Extensible Data Notation) format)." [] "settings.conf")
+
 (defmacro DAEMON_NAME "The daemon name." [] "Customers API Lite")
+
+; Helper function. Used to get the daemon settings.
+(defn -get-settings [] (edn/read-string (slurp (io/resource (SETTINGS)))))
 
 ; Helper function. Used to log messages for debugging aims in a free form.
 (defn -dbg [dbg s message]

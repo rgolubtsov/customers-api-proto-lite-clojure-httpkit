@@ -23,6 +23,11 @@
         args: A vector of command-line arguments."
     {:added "0.0.1"} [& args]
 
+    ; Getting the daemon settings.
+    (let [settings (-get-settings)]
+
+    (println (str (O_BRACKET) settings (C_BRACKET))))
+
     (let [dbg true]
 
     ; Opening the system logger.
