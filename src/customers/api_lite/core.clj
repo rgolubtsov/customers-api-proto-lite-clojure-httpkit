@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/core.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.0.3
+; Customers API Lite microservice prototype (Clojure port). Version 0.0.4
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -11,10 +11,11 @@
 ;
 
 (ns customers.api-lite.core "The main namespace of the daemon." (:gen-class)
-    (:use    [customers.api-lite.helper])
-    (:import (org.graylog2.syslog4j.impl.unix UnixSyslogConfig)
-             (org.graylog2.syslog4j.impl.unix UnixSyslog      )
-             (org.graylog2.syslog4j           SyslogIF        )))
+    (:require [clojure.tools.logging :as l])
+    (:use     [customers.api-lite.helper  ])
+    (:import  (org.graylog2.syslog4j.impl.unix UnixSyslogConfig)
+              (org.graylog2.syslog4j.impl.unix UnixSyslog      )
+              (org.graylog2.syslog4j           SyslogIF        )))
 
 (defn -main
     "The microservice entry point.
@@ -23,7 +24,11 @@
         args: A vector of command-line arguments."
     {:added "0.0.1"} [& args]
 
-    (let [dbg true]
+    ; Getting the daemon settings.
+    (let [settings (-get-settings)]
+
+    ; Identifying whether debug logging is enabled.
+    (let [dbg (get settings :logger.debug.enabled)]
 
     ; Opening the system logger.
     ; Calling <syslog.h> openlog(NULL, LOG_CONS | LOG_PID, LOG_DAEMON);
@@ -31,9 +36,23 @@
     (.setIdent cfg nil) (.setFacility cfg SyslogIF/FACILITY_DAEMON)
     (let [s (UnixSyslog.)] (.initialize s SyslogIF/UNIX_SYSLOG cfg)
 
-    (-dbg dbg s (str (O_BRACKET) (DAEMON_NAME) (C_BRACKET)))
+    (let [daemon-name (get settings :daemon.name)]
 
-    (-cleanup s))))
+    ; Getting the port number used to run the http-kit web server.
+    (let [server-port (get settings :server.port)]
+
+    ; Getting the SQLite database path.
+    (let [database-path (get settings :sqlite.database.path)]
+
+    (-dbg dbg s (str (O-BRACKET) daemon-name (C-BRACKET)))
+
+    (l/info  (str (MSG-SERVER-STARTED) server-port))
+    (.info s (str (MSG-SERVER-STARTED) server-port))
+
+    ; TODO: Try to start up the http-kit web server.
+    ; .....
+
+    (-cleanup s))))))))
 )
 
 ; vim:set nu et ts=4 sw=4:

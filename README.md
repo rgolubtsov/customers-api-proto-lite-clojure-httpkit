@@ -35,7 +35,7 @@ Surely, one may consider this project to be suitable for a wide variety of appli
 
 ## Building
 
-The microservice might be built and run under **Arch Linux**. &mdash; First install the necessary dependencies (`jdk21-openjdk`, `leiningen`, `make`, `docker`):
+The microservice might be built and run under **Arch Linux** (proven). &mdash; First install the necessary dependencies (`jdk21-openjdk`, `leiningen`, `make`, `docker`):
 
 ```
 $ sudo pacman -Syu jdk21-openjdk leiningen make docker
@@ -56,7 +56,7 @@ $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
   DAEMON_NAME="customers-api-lite"; \
-  DMN_VERSION="0.0.3"; \
+  DMN_VERSION="0.0.4"; \
   SIMPLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}.jar"; \
   BUNDLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}-standalone.jar"; \
   rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR} && \
@@ -66,8 +66,8 @@ $ lein uberjar && \
   fi
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.3.jar
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.3-standalone.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.4.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.0.4-standalone.jar
 ```
 
 Or **build** the microservice using **GNU Make** (optional, but for convenience &mdash; it covers the same **Leiningen** build workflow under the hood):
@@ -93,14 +93,14 @@ $ lein run; echo $?
 **Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task or GNU Make's `all` target:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.0.3.jar; echo $?
+$ java -jar target/uberjar/customers-api-lite-0.0.4.jar; echo $?
 ...
 ```
 
 To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.0.3.jar > /dev/null 2>&1 &
+$ java -jar target/uberjar/customers-api-lite-0.0.4.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 
@@ -126,11 +126,13 @@ No. | Endpoint name                                      | Request method and RE
 
 ### Logging
 
-The microservice has the ability to log messages to a logfile and to the Unix syslog facility... When running under Arch Linux (not in a Docker container), logs can be seen and analyzed in an ordinary fashion, by `tail`ing the `log/customers-api-lite.log` logfile:
+The microservice has the ability to log messages to a logfile and to the Unix syslog facility. To enable debug logging, the `:logger.debug.enabled` setting in the microservice main config file `resources/settings.conf` should be set to `true` *before building the microservice*. When running under Arch Linux (not in a Docker container), logs can be seen and analyzed in an ordinary fashion, by `tail`ing the `log/customers-api-lite.log` logfile:
 
 ```
 $ tail -f log/customers-api-lite.log
-[2025-10-02][13:40:10] [DEBUG] [Customers API Lite]
+[2025-10-03][02:00:10] [DEBUG] [Customers API Lite]
+[2025-10-03][02:00:10] [INFO ] Server started on port 8765
+[2025-10-03][02:00:10] [INFO ] Server stopped
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -138,7 +140,9 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Oct 02 13:40:10 <hostname> java[<pid>]: [Customers API Lite]
+Oct 03 02:00:10 <hostname> java[<pid>]: [Customers API Lite]
+Oct 03 02:00:10 <hostname> java[<pid>]: Server started on port 8765
+Oct 03 02:00:10 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:
