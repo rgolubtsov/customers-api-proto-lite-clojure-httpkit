@@ -39,7 +39,7 @@
     (let [daemon-name (get settings :daemon.name)]
 
     ; Getting the port number used to run the http-kit web server.
-    (let [server-port (get settings :server.port)]
+    (let [server-port (-get-server-port settings)]
 
     ; Getting the SQLite database path.
     (let [database-path (get settings :sqlite.database.path)]
