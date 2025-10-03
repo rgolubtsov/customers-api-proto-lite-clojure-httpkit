@@ -11,11 +11,18 @@
 ;
 
 (ns customers.api-lite.core "The main namespace of the daemon." (:gen-class)
-    (:require [clojure.tools.logging :as l])
+    (:require [clojure.tools.logging :as l]
+              [org.httpkit.server :refer  [
+                  run-server
+              ]])
     (:use     [customers.api-lite.helper  ])
     (:import  (org.graylog2.syslog4j.impl.unix UnixSyslogConfig)
               (org.graylog2.syslog4j.impl.unix UnixSyslog      )
               (org.graylog2.syslog4j           SyslogIF        )))
+
+(defn- -req-handler [req]
+    (l/debug (str (O-BRACKET) req (C-BRACKET)))
+)
 
 (defn -main
     "The microservice entry point.
@@ -49,10 +56,11 @@
     (l/info  (str (MSG-SERVER-STARTED) server-port))
     (.info s (str (MSG-SERVER-STARTED) server-port))
 
-    ; TODO: Try to start up the http-kit web server.
-    ; .....
+    ; Starting up the http-kit web server.
+    (let [server (run-server -req-handler {:port server-port})]
 
-    (-cleanup s))))))))
+    ; FIXME: Call (-cleanup) on SIGTERM / INT, not here.
+    (-cleanup s)))))))))
 )
 
 ; vim:set nu et ts=4 sw=4:
