@@ -21,7 +21,7 @@
               (org.graylog2.syslog4j           SyslogIF        )))
 
 (defn- -req-handler [req]
-    (l/debug (str (O-BRACKET) req (C-BRACKET)))
+    (-dbg (str (O-BRACKET) req (C-BRACKET)))
 )
 
 (defn -main
@@ -35,13 +35,13 @@
     (let [settings (-get-settings)]
 
     ; Identifying whether debug logging is enabled.
-    (let [dbg (get settings :logger.debug.enabled)]
+    (reset! dbg (get settings :logger.debug.enabled))
 
     ; Opening the system logger.
     ; Calling <syslog.h> openlog(NULL, LOG_CONS | LOG_PID, LOG_DAEMON);
     (let [cfg (UnixSyslogConfig.)]
     (.setIdent cfg nil) (.setFacility cfg SyslogIF/FACILITY_DAEMON)
-    (let [s (UnixSyslog.)] (.initialize s SyslogIF/UNIX_SYSLOG cfg)
+    (reset! s(UnixSyslog.))(.initialize@s SyslogIF/UNIX_SYSLOG cfg))
 
     (let [daemon-name (get settings :daemon.name)]
 
@@ -49,18 +49,18 @@
     (let [server-port (-get-server-port settings)]
 
     ; Getting the SQLite database path.
-    (let [database-path (get settings :sqlite.database.path)]
+    (let [database-path (get settings :sqlite.database.path)])
 
-    (-dbg dbg s (str (O-BRACKET) daemon-name (C-BRACKET)))
+    (-dbg (str (O-BRACKET) daemon-name (C-BRACKET)))
 
     (l/info  (str (MSG-SERVER-STARTED) server-port))
-    (.info s (str (MSG-SERVER-STARTED) server-port))
+    (.info@s (str (MSG-SERVER-STARTED) server-port))
 
     ; Starting up the http-kit web server.
-    (let [server (run-server -req-handler {:port server-port})]
+    (let [server (run-server -req-handler {:port server-port})])
 
     ; FIXME: Call (-cleanup) on SIGTERM / INT, not here.
-    (-cleanup s)))))))))
+    (-cleanup))))
 )
 
 ; vim:set nu et ts=4 sw=4:
