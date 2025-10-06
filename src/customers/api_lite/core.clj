@@ -18,6 +18,7 @@
     (:require [clojure.tools.logging :as l]
               [org.httpkit.server :refer  [
                   run-server
+                  server-status
               ]]))
 
 (defn- -req-handler [req]
@@ -53,14 +54,21 @@
     ; Getting the port number used to run the http-kit web server.
     (let [server-port (-get-server-port settings)]
 
-    (l/info  (str (MSG-SERVER-STARTED) server-port))
-    (.info@s (str (MSG-SERVER-STARTED) server-port))
-
     ; Starting up the http-kit web server.
-    (let [server (run-server -req-handler {:port server-port})])))
+    (let [server (run-server -req-handler {
+        :port                 server-port
+        :legacy-return-value? false
+    })]
+
+    (if (instance? org.httpkit.server.HttpServer server) (do
+        (l/info  (str (MSG-SERVER-STARTED) server-port))
+        (.info@s (str (MSG-SERVER-STARTED) server-port))
+
+        (-dbg (str (O-BRACKET) (server-status server) (C-BRACKET)))
+    )))))
 
     ; FIXME: Call (-cleanup) on SIGTERM / INT, not here.
-    (-cleanup)
+;   (-cleanup)
 )
 
 ; vim:set nu et ts=4 sw=4:
