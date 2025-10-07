@@ -71,10 +71,22 @@
         (-dbg (str (O-BRACKET) (server-status server) (C-BRACKET)))
     ))
 
+;;  (.addShutdownHook (Runtime/getRuntime) (Thread. #(
+;;      (l/debug "---.addShutdownHook")
+;;
+;;      (-cleanup)
+;;
+;;      (l/debug (str "---.addShutdownHook" (server-status server)))
+;;
+;;      (server-stop! server)
+;;  )))
+
     (set-break-handler! (fn [_]
-        (-dbg (str (O-BRACKET) (server-status server) (C-BRACKET)))
+        (l/debug "---set-break-handler!")
 
         (-cleanup)
+
+        (l/debug (str "---set-break-handler!" (server-status server)))
 
         (server-stop! server)
     )))))
