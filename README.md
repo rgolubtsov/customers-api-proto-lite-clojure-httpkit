@@ -104,6 +104,16 @@ $ java -jar target/uberjar/customers-api-lite-0.0.5.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 
+**Note:** This will suppress all the console output only; logging to a logfile and to the Unix syslog will remain unchanged.
+
+The daemonized microservice then can be stopped gracefully at any time by issuing the following command:
+
+```
+$ kill -SIGTERM <pid>
+$
+[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.0.5.jar > /dev/null 2>&1
+```
+
 ## Consuming
 
 The microservice *should* expose **six REST API endpoints** to web clients... They are all intended to deal with customer entities and/or contact entities that belong to customer profiles. The following table displays their syntax:
