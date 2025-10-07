@@ -19,6 +19,10 @@
               [org.httpkit.server :refer  [
                   run-server
                   server-status
+                  server-stop!
+              ]]
+              [clojure.repl       :refer  [
+                  set-break-handler!
               ]]))
 
 (defn- -req-handler [req]
@@ -65,10 +69,15 @@
         (.info@s (str (MSG-SERVER-STARTED) server-port))
 
         (-dbg (str (O-BRACKET) (server-status server) (C-BRACKET)))
-    )))))
+    ))
 
-    ; FIXME: Call (-cleanup) on SIGTERM / INT, not here.
-;   (-cleanup)
+    (set-break-handler! (fn [_]
+        (-dbg (str (O-BRACKET) (server-status server) (C-BRACKET)))
+
+        (-cleanup)
+
+        (server-stop! server)
+    )))))
 )
 
 ; vim:set nu et ts=4 sw=4:
