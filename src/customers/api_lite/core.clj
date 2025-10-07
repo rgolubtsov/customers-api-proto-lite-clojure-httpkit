@@ -61,11 +61,11 @@
         :legacy-return-value? false
     })]
 
-    (if (instance? org.httpkit.server.HttpServer server) (do
+    (if (and (instance? org.httpkit.server.HttpServer server)
+        (= (server-status server) :running)) (do
+
         (l/info  (str (MSG-SERVER-STARTED) server-port))
         (.info@s (str (MSG-SERVER-STARTED) server-port))
-
-        (-dbg (str (O-BRACKET) (server-status server) (C-BRACKET)))
     ))
 
     ; Trapping SIGINT / SIGTERM signals by adding a shutdown hook,
@@ -75,12 +75,7 @@
     ;     public void run() {...}
     ; });
     (.addShutdownHook (Runtime/getRuntime) (Thread. #(
-        (l/debug "---.addShutdownHook")
-
         (-cleanup)
-
-        (l/debug (str "---.addShutdownHook" (server-status server)))
-
         (server-stop! server)
     ))))))
 )
