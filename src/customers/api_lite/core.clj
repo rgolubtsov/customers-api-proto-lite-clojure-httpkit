@@ -20,9 +20,6 @@
                   run-server
                   server-status
                   server-stop!
-              ]]
-              [clojure.repl       :refer  [
-                  set-break-handler!
               ]]))
 
 (defn- -req-handler [req]
@@ -71,25 +68,21 @@
         (-dbg (str (O-BRACKET) (server-status server) (C-BRACKET)))
     ))
 
-;;  (.addShutdownHook (Runtime/getRuntime) (Thread. #(
-;;      (l/debug "---.addShutdownHook")
-;;
-;;      (-cleanup)
-;;
-;;      (l/debug (str "---.addShutdownHook" (server-status server)))
-;;
-;;      (server-stop! server)
-;;  )))
-
-    (set-break-handler! (fn [_]
-        (l/debug "---set-break-handler!")
+    ; Trapping SIGINT / SIGTERM signals by adding a shutdown hook,
+    ; just as it can be written in pure Java:
+    ; Runtime.getRuntime().addShutdownHook(new Thread() {
+    ;     @Override
+    ;     public void run() {...}
+    ; });
+    (.addShutdownHook (Runtime/getRuntime) (Thread. #(
+        (l/debug "---.addShutdownHook")
 
         (-cleanup)
 
-        (l/debug (str "---set-break-handler!" (server-status server)))
+        (l/debug (str "---.addShutdownHook" (server-status server)))
 
         (server-stop! server)
-    )))))
+    ))))))
 )
 
 ; vim:set nu et ts=4 sw=4:
