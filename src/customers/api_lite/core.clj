@@ -55,11 +55,23 @@
     ; Getting the port number used to run the http-kit web server.
     (let [server-port (-get-server-port settings)]
 
-    ; Starting up the http-kit web server.
-    (let [server (run-server -req-handler {
-        :port                 server-port
-        :legacy-return-value? false
-    })]
+    ; Trying to start up the http-kit web server.
+    (let [server (try
+        (run-server -req-handler {
+            :port                 server-port
+            :legacy-return-value? false
+        })
+    (catch Exception e
+        (if (and (instance? java.net.BindException e)
+            (= (ex-message e) (MSG-ADDR-ALREADY-IN-USE)))
+
+            (l/error (str (ERR-CANNOT-START-SERVER) (ERR-ADDR-ALREADY-IN-USE)))
+            (l/error (str (ERR-CANNOT-START-SERVER) (ERR-SERV-UNKNOWN-REASON)))
+        )
+
+        (-cleanup)
+        (System/exit (EXIT-FAILURE))
+    ))]
 
     (if (and (instance? org.httpkit.server.HttpServer server)
         (= (server-status server) :running)) (do
@@ -75,6 +87,9 @@
     ;     public void run() {...}
     ; });
     (.addShutdownHook (Runtime/getRuntime) (Thread. #(
+        (l/info  (MSG-SERVER-STOPPED))
+        (.info@s (MSG-SERVER-STOPPED))
+
         (-cleanup)
         (server-stop! server)
     ))))))
