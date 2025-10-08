@@ -16,8 +16,10 @@
               [clojure.edn           :as edn]))
 
 ; Helper constants.
-(defmacro O-BRACKET [] "[")
-(defmacro C-BRACKET [] "]")
+(defmacro EXIT-FAILURE []   1) ;    Failing exit status.
+(defmacro EXIT-SUCCESS []   0) ; Successful exit status.
+(defmacro O-BRACKET    [] "[")
+(defmacro C-BRACKET    [] "]")
 
 ; Common notification messages.
 (defmacro MSG-SERVER-STARTED [] "Server started on port ")
@@ -27,6 +29,13 @@
 (defmacro ERR-PORT-VALID-MUST-BE-POSITIVE-INT [] (str
     "Valid server port must be a positive integer value, in the range "
     "1024 .. 49151. The default value of 8080 will be used instead."))
+(defmacro ERR-CANNOT-START-SERVER []
+    "FATAL: Cannot start server ")
+(defmacro ERR-ADDR-ALREADY-IN-USE []
+    "due to address requested already in use. Quitting...")
+(defmacro ERR-SERV-UNKNOWN-REASON []
+    "for an unknown reason. Quitting...")
+(defmacro MSG-ADDR-ALREADY-IN-USE [] "Address already in use")
 
 (defmacro SETTINGS "The filename of the daemon settings
     (in edn (Extensible Data Notation) format)." [] "settings.conf")
@@ -68,9 +77,6 @@
 
 ; Helper function. Makes final cleanups, closes streams, etc.
 (defn -cleanup []
-    (l/info  (MSG-SERVER-STOPPED))
-    (.info@s (MSG-SERVER-STOPPED))
-
     ; Closing the system logger.
     ; Calling <syslog.h> closelog();
     (.shutdown@s)
