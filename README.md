@@ -140,9 +140,10 @@ The microservice has the ability to log messages to a logfile and to the Unix sy
 
 ```
 $ tail -f log/customers-api-lite.log
-[2025-10-03][02:00:10] [DEBUG] [Customers API Lite]
-[2025-10-03][02:00:10] [INFO ] Server started on port 8765
-[2025-10-03][02:00:10] [INFO ] Server stopped
+[2025-10-09][01:50:50] [DEBUG] [Customers API Lite]
+[2025-10-09][01:50:50] [INFO ] Server started on port 8765
+[2025-10-09][01:55:50] [DEBUG] [{:remote-addr "0:0:0:0:0:0:0:1", ..., :uri "/", :server-name "localhost", :query-string nil, :body nil, :scheme :http, :request-method :get}]
+[2025-10-09][02:00:10] [INFO ] Server stopped
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -150,9 +151,10 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Oct 03 02:00:10 <hostname> java[<pid>]: [Customers API Lite]
-Oct 03 02:00:10 <hostname> java[<pid>]: Server started on port 8765
-Oct 03 02:00:10 <hostname> java[<pid>]: Server stopped
+Oct 09 01:50:50 <hostname> java[<pid>]: [Customers API Lite]
+Oct 09 01:50:50 <hostname> java[<pid>]: Server started on port 8765
+Oct 09 01:55:50 <hostname> java[<pid>]: [{:remote-addr "0:0:0:0:0:0:0:1", ..., :uri "/", :server-name "localhost", :query-string nil, :body nil, :scheme :http, :request-method :get}]
+Oct 09 02:00:10 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:
