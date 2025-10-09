@@ -27,6 +27,8 @@
     (-dbg (str (O-BRACKET) (s/upper-case (s/replace method (COLON) (str)))
                (C-BRACKET))))
 
+    (-dbg (str (O-BRACKET) @cnx (C-BRACKET)))
+
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
     }}
