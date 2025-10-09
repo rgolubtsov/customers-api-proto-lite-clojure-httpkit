@@ -16,8 +16,9 @@
               (org.graylog2.syslog4j           SyslogIF        ))
     (:use     [customers.api-lite.helper    ]
               [customers.api-lite.controller])
-    (:require [clojure.tools.logging :as l]
-              [org.httpkit.server :refer  [
+    (:require [clojure.tools.logging :as l  ]
+              [next.jdbc             :as db ]
+              [org.httpkit.server    :refer [
                   run-server
                   server-status
                   server-stop!
@@ -43,11 +44,14 @@
     (reset! dbg (get settings :logger.debug.enabled))
 
     (let [daemon-name (get settings :daemon.name)]
-
     (-dbg (str (O-BRACKET) daemon-name (C-BRACKET))))
 
-    ; Getting the SQLite database path.
-    (let [database-path (get settings :sqlite.database.path)])
+    ; Getting the SQLite database JDBC URL.
+    (let [datasource-url (get settings :sqlite.datasource.url)]
+
+    ; Connecting to the database.
+    (reset! cnx (db/get-connection (db/get-datasource datasource-url)))
+    (-dbg (str (O-BRACKET) @cnx (C-BRACKET))))
 
     ; Getting the port number used to run the http-kit web server.
     (let [server-port (-get-server-port settings)]
