@@ -50,6 +50,7 @@ $ sudo pacman -Syu jdk21-openjdk leiningen make docker
 $ lein clean
 $
 $ lein compile :all
+Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
 $
@@ -64,6 +65,7 @@ $ lein uberjar && \
   if [ -f ${DB_DIR}/${DAEMON_NAME}.db.xz ]; then \
      unxz ${DB_DIR}/${DAEMON_NAME}.db.xz; \
   fi
+Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
 Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.0.jar
