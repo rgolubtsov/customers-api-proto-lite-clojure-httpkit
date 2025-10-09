@@ -11,7 +11,8 @@
 ;
 
 (ns customers.api-lite.controller "The controller namespace of the daemon."
-    (:use [customers.api-lite.helper]))
+    (:use     [customers.api-lite.helper])
+    (:require [clojure.string :as s     ]))
 
 (defn req-handler
     "The request handler callback. Gets called on each incoming HTTP request.
@@ -20,7 +21,15 @@
         req: A hash map representing the incoming HTTP request object."
     {:added "0.1.0"} [req]
 
-    (-dbg (str (O-BRACKET) req (C-BRACKET)))
+;   (-dbg (str (O-BRACKET) req (C-BRACKET)))
+
+    (let [method (get req :request-method)]
+    (-dbg (str (O-BRACKET) (s/upper-case (s/replace method (COLON) (str)))
+               (C-BRACKET))))
+
+    {:headers {
+        (CONT-TYPE) (MIME-TYPE)
+    }}
 )
 
 ; vim:set nu et ts=4 sw=4:
