@@ -18,6 +18,7 @@
 ; Helper constants.
 (defmacro EXIT-FAILURE []   1) ;    Failing exit status.
 (defmacro EXIT-SUCCESS []   0) ; Successful exit status.
+(defmacro COLON        [] ":")
 (defmacro O-BRACKET    [] "[")
 (defmacro C-BRACKET    [] "]")
 
@@ -43,6 +44,10 @@
 (defmacro MIN-PORT "The minimum port number allowed." [] 1024 )
 (defmacro MAX-PORT "The maximum port number allowed." [] 49151)
 (defmacro DEF-PORT "The default server port number."  [] 8080 )
+
+; HTTP response-related constants.
+(defmacro CONT-TYPE [] "content-type"    )
+(defmacro MIME-TYPE [] "application/json")
 
 ; Globals.
 (def s   "The Unix system logger."    (atom {}))
