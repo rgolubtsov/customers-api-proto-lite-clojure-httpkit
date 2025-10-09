@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/helper.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.0
+; Customers API Lite microservice prototype (Clojure port). Version 0.1.5
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -18,6 +18,7 @@
 ; Helper constants.
 (defmacro EXIT-FAILURE []   1) ;    Failing exit status.
 (defmacro EXIT-SUCCESS []   0) ; Successful exit status.
+(defmacro COLON        [] ":")
 (defmacro O-BRACKET    [] "[")
 (defmacro C-BRACKET    [] "]")
 
@@ -44,9 +45,14 @@
 (defmacro MAX-PORT "The maximum port number allowed." [] 49151)
 (defmacro DEF-PORT "The default server port number."  [] 8080 )
 
+; HTTP response-related constants.
+(defmacro CONT-TYPE [] "content-type"    )
+(defmacro MIME-TYPE [] "application/json")
+
 ; Globals.
 (def s   "The Unix system logger."    (atom {}))
 (def dbg "The debug logging enabler." (atom {}))
+(def cnx "The database connection."   (atom {}))
 
 ; Helper function. Used to get the daemon settings.
 (defn -get-settings [] (edn/read-string (slurp (io/resource (SETTINGS)))))
@@ -77,6 +83,8 @@
 
 ; Helper function. Makes final cleanups, closes streams, etc.
 (defn -cleanup []
+    (.close@cnx)
+
     ; Closing the system logger.
     ; Calling <syslog.h> closelog();
     (.shutdown@s)

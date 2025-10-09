@@ -50,13 +50,14 @@ $ sudo pacman -Syu jdk21-openjdk leiningen make docker
 $ lein clean
 $
 $ lein compile :all
+Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
 $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
   DAEMON_NAME="customers-api-lite"; \
-  DMN_VERSION="0.1.0"; \
+  DMN_VERSION="0.1.5"; \
   SIMPLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}.jar"; \
   BUNDLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}-standalone.jar"; \
   rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR} && \
@@ -64,10 +65,11 @@ $ lein uberjar && \
   if [ -f ${DB_DIR}/${DAEMON_NAME}.db.xz ]; then \
      unxz ${DB_DIR}/${DAEMON_NAME}.db.xz; \
   fi
+Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.0.jar
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.0-standalone.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.5.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.5-standalone.jar
 ```
 
 Or **build** the microservice using **GNU Make** (optional, but for convenience &mdash; it covers the same **Leiningen** build workflow under the hood):
@@ -93,14 +95,14 @@ $ lein run; echo $?
 **Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task or GNU Make's `all` target:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.1.0.jar; echo $?
+$ java -jar target/uberjar/customers-api-lite-0.1.5.jar; echo $?
 ...
 ```
 
 To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.1.0.jar > /dev/null 2>&1 &
+$ java -jar target/uberjar/customers-api-lite-0.1.5.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 
@@ -111,7 +113,7 @@ The daemonized microservice then can be stopped gracefully at any time by issuin
 ```
 $ kill -SIGTERM <pid>
 $
-[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.1.0.jar > /dev/null 2>&1
+[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.1.5.jar > /dev/null 2>&1
 ```
 
 ## Consuming
