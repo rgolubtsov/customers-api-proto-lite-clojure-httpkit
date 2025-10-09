@@ -14,7 +14,8 @@
     (:import  (org.graylog2.syslog4j.impl.unix UnixSyslogConfig)
               (org.graylog2.syslog4j.impl.unix UnixSyslog      )
               (org.graylog2.syslog4j           SyslogIF        ))
-    (:use     [customers.api-lite.helper  ])
+    (:use     [customers.api-lite.helper    ]
+              [customers.api-lite.controller])
     (:require [clojure.tools.logging :as l]
               [org.httpkit.server :refer  [
                   run-server
@@ -22,15 +23,11 @@
                   server-stop!
               ]]))
 
-(defn- -req-handler [req]
-    (-dbg (str (O-BRACKET) req (C-BRACKET)))
-)
-
 (defn -main
     "The microservice entry point.
 
     Args:
-        args: A vector of command-line arguments."
+        args: A list of command-line arguments."
     {:added "0.0.1"} [& args]
 
     ; Opening the system logger.
@@ -57,7 +54,7 @@
 
     ; Trying to start up the http-kit web server.
     (let [server (try
-        (run-server -req-handler {
+        (run-server req-handler {
             :port                 server-port
             :legacy-return-value? false
         })
