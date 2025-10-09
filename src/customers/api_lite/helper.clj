@@ -52,6 +52,7 @@
 ; Globals.
 (def s   "The Unix system logger."    (atom {}))
 (def dbg "The debug logging enabler." (atom {}))
+(def cnx "The database connection."   (atom {}))
 
 ; Helper function. Used to get the daemon settings.
 (defn -get-settings [] (edn/read-string (slurp (io/resource (SETTINGS)))))
@@ -82,6 +83,8 @@
 
 ; Helper function. Makes final cleanups, closes streams, etc.
 (defn -cleanup []
+    (.close@cnx)
+
     ; Closing the system logger.
     ; Calling <syslog.h> closelog();
     (.shutdown@s)
