@@ -35,7 +35,7 @@ Surely, one may consider this project to be suitable for a wide variety of appli
 
 ## Building
 
-The microservice might be built and run under **Arch Linux** (proven). &mdash; First install the necessary dependencies (`jdk21-openjdk`, `leiningen`, `make`, `docker`):
+The microservice might be built and run successfully under **Arch Linux** (proven). &mdash; First install the necessary dependencies (`jdk21-openjdk`, `leiningen`, `make`, `docker`):
 
 ```
 $ sudo pacman -Syu jdk21-openjdk leiningen make docker
