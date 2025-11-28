@@ -23,11 +23,11 @@
 
 ;   (-dbg (str (O-BRACKET) req (C-BRACKET)))
 
-    (let [method (get req :request-method)]
-    (-dbg (str (O-BRACKET) (s/upper-case (s/replace method (COLON) (str)))
-               (C-BRACKET))))
+    (let [method- (get req :request-method)]
+    (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
+    (-dbg (str (O-BRACKET) method (C-BRACKET)))))
 
-    (-dbg (str (O-BRACKET) @cnx (C-BRACKET)))
+;   (-dbg (str (O-BRACKET) @cnx (C-BRACKET)))
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
