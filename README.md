@@ -142,12 +142,11 @@ The microservice has the ability to log messages to a logfile and to the Unix sy
 
 ```
 $ tail -f log/customers-api-lite.log
-[2025-11-29][00:50:00] [DEBUG] [Customers API Lite]
-[2025-11-29][00:50:00] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@7a583586]
-[2025-11-29][00:50:00] [INFO ] Server started on port 8765
-[2025-11-29][00:50:10] [DEBUG] [GET]
-[2025-11-29][00:50:10] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@7a583586]
-[2025-11-29][00:50:20] [INFO ] Server stopped
+[2025-11-29][01:30:20] [DEBUG] [Customers API Lite]
+[2025-11-29][01:30:20] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@7a583586]
+[2025-11-29][01:30:20] [INFO ] Server started on port 8765
+[2025-11-29][01:30:30] [DEBUG] [GET]
+[2025-11-29][01:30:40] [INFO ] Server stopped
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -155,12 +154,11 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Nov 29 00:50:00 <hostname> java[<pid>]: [Customers API Lite]
-Nov 29 00:50:00 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@7a583586]
-Nov 29 00:50:00 <hostname> java[<pid>]: Server started on port 8765
-Nov 29 00:50:10 <hostname> java[<pid>]: [GET]
-Nov 29 00:50:10 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@7a583586]
-Nov 29 00:50:20 <hostname> java[<pid>]: Server stopped
+Nov 29 01:30:20 <hostname> java[<pid>]: [Customers API Lite]
+Nov 29 01:30:20 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@7a583586]
+Nov 29 01:30:20 <hostname> java[<pid>]: Server started on port 8765
+Nov 29 01:30:30 <hostname> java[<pid>]: [GET]
+Nov 29 01:30:40 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:
