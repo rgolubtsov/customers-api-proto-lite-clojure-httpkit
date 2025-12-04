@@ -12,10 +12,15 @@
 
 (ns customers.api-lite.controller "The controller namespace of the daemon."
     (:use     [customers.api-lite.helper])
-    (:require [clojure.string :as s     ]))
+    (:require [clojure.string :as s     ]
+              [compojure.core :refer    [
+                  defroutes
+                  GET
+              ]]))
 
-(defn req-handler
-    "The request handler callback. Gets called on each incoming HTTP request.
+(defn root-req-handler
+    "The root request handler callback.
+    Gets called on each `/` incoming HTTP request.
 
     Args:
         req: A hash map representing the incoming HTTP request object."
@@ -32,6 +37,15 @@
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
     }}
+)
+
+(defroutes api-lite-routes
+    "The compound request handler callback (Compojure middleware).
+    Gets called on each incoming HTTP request."
+
+    {:added "0.1.5"}
+
+    (GET (SLASH) [] root-req-handler)
 )
 
 ; vim:set nu et ts=4 sw=4:

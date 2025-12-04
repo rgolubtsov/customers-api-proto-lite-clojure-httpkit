@@ -58,7 +58,7 @@
 
     ; Trying to start up the http-kit web server.
     (let [server (try
-        (run-server req-handler {
+        (run-server api-lite-routes {
             :port                 server-port
             :legacy-return-value? false
         })
