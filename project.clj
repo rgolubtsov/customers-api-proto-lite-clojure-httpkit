@@ -26,6 +26,7 @@
         [com.github.seancorfield/next.jdbc "1.3.1070"]
         [org.xerial/sqlite-jdbc            "3.50.3.0"]
         [http-kit                          "2.8.1"   ]
+        [compojure                         "1.7.2"   ]
     ]
     :main ^:skip-aot customers.api-lite.core
     :target-path     "target/%s"
