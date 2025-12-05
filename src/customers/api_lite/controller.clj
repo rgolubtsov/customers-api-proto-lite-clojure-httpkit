@@ -39,13 +39,66 @@
     }}
 )
 
+; REST API endpoints ----------------------------------------------------------
+
+(defn list-customers
+    "The `GET /v1/customers` endpoint.
+    Retrieves from the database and lists all customer profiles.
+
+    Args:
+        req: A hash map representing the incoming HTTP request object.
+
+    Returns:
+        HTTP status code `200 OK` and the response body in JSON representation,
+        containing a list of all customer profiles.
+        May return client or server error depending on incoming request."
+    {:added "0.1.5"} [req]
+
+    (let [method- (get req :request-method)]
+    (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
+    (-dbg (str (O-BRACKET) method (C-BRACKET)))))
+
+    {:headers {
+        (CONT-TYPE) (MIME-TYPE)
+    }}
+)
+
+(defn get-customer
+    "The `GET /v1/customers/{customer_id}` endpoint.
+    Retrieves profile details for a given customer from the database.
+
+    Args:
+        req: A hash map representing the incoming HTTP request object.
+
+    Returns:
+        A specific HTTP status code with profile details for a given customer
+        (in the response body in JSON representation).
+        May return client or server error depending on incoming request."
+    {:added "0.1.5"} [req]
+
+    (let [method- (get req :request-method)]
+    (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
+    (-dbg (str (O-BRACKET) method (C-BRACKET)))))
+
+    {:headers {
+        (CONT-TYPE) (MIME-TYPE)
+    }}
+)
+
+; -----------------------------------------------------------------------------
+
 (defroutes api-lite-routes
     "The compound request handler callback (Compojure middleware).
     Gets called on each incoming HTTP request."
-
     {:added "0.1.5"}
 
     (GET (SLASH) [] root-req-handler)
+
+    (GET (str (SLASH) (REST-VERSION)
+              (SLASH) (REST-PREFIX)) [] list-customers)
+    (GET (str (SLASH) (REST-VERSION)
+              (SLASH) (REST-PREFIX)
+              (SLASH) (COLON) (REST-CUST-ID)) [] get-customer)
 )
 
 ; vim:set nu et ts=4 sw=4:
