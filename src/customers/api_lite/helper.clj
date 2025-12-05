@@ -46,6 +46,11 @@
 (defmacro MAX-PORT "The maximum port number allowed." [] 49151)
 (defmacro DEF-PORT "The default server port number."  [] 8080 )
 
+; REST URI path-related constants.
+(defmacro REST-VERSION [] "v1"         )
+(defmacro REST-PREFIX  [] "customers"  )
+(defmacro REST-CUST-ID [] "customer_id")
+
 ; HTTP response-related constants.
 (defmacro CONT-TYPE [] "content-type"    )
 (defmacro MIME-TYPE [] "application/json")
