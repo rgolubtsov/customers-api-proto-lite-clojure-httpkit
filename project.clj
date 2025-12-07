@@ -1,7 +1,7 @@
 ;
 ; project.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.5
+; Customers API Lite microservice prototype (Clojure port). Version 0.1.6
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -10,7 +10,7 @@
 ; (See the LICENSE file at the top of the source tree.)
 ;
 
-(defproject customers-api-lite "0.1.5"
+(defproject customers-api-lite "0.1.6"
     :description     "Customers API Lite microservice prototype."
     :url             "https://github.com/rgolubtsov/customers-api-proto-lite-clojure-httpkit"
     :license {
@@ -26,6 +26,7 @@
         [com.github.seancorfield/next.jdbc "1.3.1070"]
         [org.xerial/sqlite-jdbc            "3.50.3.0"]
         [http-kit                          "2.8.1"   ]
+        [compojure                         "1.7.2"   ]
     ]
     :main ^:skip-aot customers.api-lite.core
     :target-path     "target/%s"

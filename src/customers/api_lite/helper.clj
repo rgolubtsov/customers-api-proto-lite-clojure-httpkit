@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/helper.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.5
+; Customers API Lite microservice prototype (Clojure port). Version 0.1.6
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -19,6 +19,7 @@
 (defmacro EXIT-FAILURE []   1) ;    Failing exit status.
 (defmacro EXIT-SUCCESS []   0) ; Successful exit status.
 (defmacro COLON        [] ":")
+(defmacro SLASH        [] "/")
 (defmacro O-BRACKET    [] "[")
 (defmacro C-BRACKET    [] "]")
 
@@ -44,6 +45,11 @@
 (defmacro MIN-PORT "The minimum port number allowed." [] 1024 )
 (defmacro MAX-PORT "The maximum port number allowed." [] 49151)
 (defmacro DEF-PORT "The default server port number."  [] 8080 )
+
+; REST URI path-related constants.
+(defmacro REST-VERSION [] "v1"         )
+(defmacro REST-PREFIX  [] "customers"  )
+(defmacro REST-CUST-ID [] "customer_id")
 
 ; HTTP response-related constants.
 (defmacro CONT-TYPE [] "content-type"    )

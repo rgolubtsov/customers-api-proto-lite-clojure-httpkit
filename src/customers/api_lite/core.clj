@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/core.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.5
+; Customers API Lite microservice prototype (Clojure port). Version 0.1.6
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -58,7 +58,7 @@
 
     ; Trying to start up the http-kit web server.
     (let [server (try
-        (run-server req-handler {
+        (run-server api-lite-routes {
             :port                 server-port
             :legacy-return-value? false
         })
