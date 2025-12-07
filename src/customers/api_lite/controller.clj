@@ -15,6 +15,7 @@
     (:require [clojure.string :as s     ]
               [compojure.core :refer    [
                   defroutes
+                  context
                   GET
               ]]))
 
@@ -92,13 +93,19 @@
     Gets called on each incoming HTTP request."
     {:added "0.1.5"}
 
-    (GET (SLASH) [] root-req-handler)
+    (GET (SLASH) [] root-req-handler) ; <== GET /
 
-    (GET (str (SLASH) (REST-VERSION)
-              (SLASH) (REST-PREFIX)) [] list-customers)
-    (GET (str (SLASH) (REST-VERSION)
-              (SLASH) (REST-PREFIX)
-              (SLASH) (COLON) (REST-CUST-ID)) [] get-customer)
+    ; /v1/customers
+    (context (str (SLASH) (REST-VERSION) (SLASH) (REST-PREFIX)) []
+;       (PUT      (SLASH)                           []  add-customer )
+;       (PUT (str (SLASH)         (REST-CONTACTS))  []  add-contact  )
+        (GET      (SLASH)                           [] list-customers)
+        (GET (str (SLASH) (COLON) (REST-CUST-ID))   []  get-customer ))
+;       (GET (str (SLASH) (COLON) (REST-CUST-ID)
+;                 (SLASH)         (REST-CONTACTS))  [] list-contacts )
+;       (GET (str (SLASH) (COLON) (REST-CUST-ID)
+;                 (SLASH)         (REST-CONTACTS)
+;                 (SLASH) (COLON) (REST-CONT-TYPE)) [] list-contacts-by-type))
 )
 
 ; vim:set nu et ts=4 sw=4:
