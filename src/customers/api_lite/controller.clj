@@ -16,10 +16,13 @@
               [compojure.core :refer    [
                   defroutes
                   context
+                  ANY
                   GET
               ]]))
 
-(defn root-req-handler
+; Request filters -------------------------------------------------------------
+
+(defn any-req-filter
     "The root request handler callback.
     Gets called on each `/` incoming HTTP request.
 
@@ -93,7 +96,8 @@
     Gets called on each incoming HTTP request."
     {:added "0.1.5"}
 
-    (GET (SLASH) [] root-req-handler) ; <== GET /
+    ; /
+    (ANY (SLASH) [] any-req-filter)
 
     ; /v1/customers
     (context (str (SLASH) (REST-VERSION) (SLASH) (REST-PREFIX)) []
