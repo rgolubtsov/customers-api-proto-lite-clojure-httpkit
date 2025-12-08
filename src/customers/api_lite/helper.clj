@@ -19,6 +19,7 @@
 (defmacro EXIT-FAILURE []   1) ;    Failing exit status.
 (defmacro EXIT-SUCCESS []   0) ; Successful exit status.
 (defmacro COLON        [] ":")
+(defmacro ANY-         [] "*")
 (defmacro SLASH        [] "/")
 (defmacro O-BRACKET    [] "[")
 (defmacro C-BRACKET    [] "]")
