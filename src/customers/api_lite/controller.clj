@@ -16,6 +16,7 @@
               [compojure.core :refer    [
                   defroutes
                   context
+                  PUT
                   GET
               ]]))
 
@@ -29,6 +30,79 @@
 )
 
 ; REST API endpoints ----------------------------------------------------------
+
+(defn add-customer
+    "The `PUT /v1/customers` endpoint.
+    Creates a new customer (puts customer data to the database).
+
+    The request body is defined exactly in the form
+    as `{\"name\":\"{customer_name}\"}`. It should be passed
+    with the accompanied request header `content-type` just like the following:
+
+    ```
+    -H 'content-type: application/json' -d '{\"name\":\"{customer_name}\"}'
+    ```
+
+    `{customer_name}` is a name assigned to a newly created customer.
+
+    Args:
+        req: A hash map representing the incoming HTTP request object.
+
+    Returns:
+        HTTP status code `201 Created`, the `Location` response header
+        (among others), and the response body in JSON representation,
+        containing profile details of a newly created customer.
+        May return client or server error depending on incoming request."
+    {:added "0.1.6"} [req]
+
+    (-method req)
+
+    {:status 201 :headers {
+        (HDR-LOCATION) (str (SLASH) (REST-VERSION)
+                            (SLASH) (REST-PREFIX)
+                            (SLASH) "?")
+        (CONT-TYPE) (MIME-TYPE)
+    }}
+)
+
+(defn add-contact
+    "The `PUT /v1/customers/contacts` endpoint.
+    Creates a new contact for a given customer (puts a contact
+    regarding a given customer to the database).
+
+    The request body is defined exactly in the form
+    as `{\"customer_id\":\"{customer_id}\",\"contact\":\"{customer_contact}\"}`
+    It should be passed with the accompanied request header `content-type`
+    just like the following:
+
+    ```
+    -H 'content-type: application/json' -d '{\"customer_id\":\"{customer_id}\",\"contact\":\"{customer_contact}\"}'
+    ```
+
+    `{customer_id}` is the customer ID used to associate a newly created
+    contact with this customer.
+
+    Args:
+        req: A hash map representing the incoming HTTP request object.
+
+    Returns:
+        HTTP status code `201 Created`, the `Location` response header
+        (among others), and the response body in JSON representation,
+        containing details of a newly created customer contact (phone or email)
+        May return client or server error depending on incoming request."
+    {:added "0.1.6"} [req]
+
+    (-method req)
+
+    {:status 201 :headers {
+        (HDR-LOCATION) (str (SLASH) (REST-VERSION)
+                            (SLASH) (REST-PREFIX)
+                            (SLASH) "?"
+                            (SLASH) (REST-CONTACTS)
+                            (SLASH) "?")
+        (CONT-TYPE) (MIME-TYPE)
+    }}
+)
 
 (defn list-customers
     "The `GET /v1/customers` endpoint.
@@ -79,8 +153,8 @@
 
     ; /v1/customers
     (context (str (SLASH) (REST-VERSION) (SLASH) (REST-PREFIX)) []
-;       (PUT      (SLASH)                           []  add-customer )
-;       (PUT (str (SLASH)         (REST-CONTACTS))  []  add-contact  )
+        (PUT      (SLASH)                           []  add-customer )
+        (PUT (str (SLASH)         (REST-CONTACTS))  []  add-contact  )
         (GET      (SLASH)                           [] list-customers)
         (GET (str (SLASH) (COLON) (REST-CUST-ID))   []  get-customer ))
 ;       (GET (str (SLASH) (COLON) (REST-CUST-ID)
