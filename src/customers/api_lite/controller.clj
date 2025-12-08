@@ -20,6 +20,15 @@
                   GET
               ]]))
 
+; Helper function. Used to expose a request method on incoming HTTP requests.
+(defn -method [req]
+;   (-dbg (str (O-BRACKET) req (C-BRACKET)))
+
+    (let [method- (get req :request-method)]
+    (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
+    (-dbg (str (O-BRACKET) method (C-BRACKET)))))
+)
+
 ; REST API endpoints ----------------------------------------------------------
 
 (defn list-customers
@@ -35,15 +44,11 @@
         May return client or server error depending on incoming request."
     {:added "0.1.5"} [req]
 
-;   (let [method- (get req :request-method)]
-;   (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
-;   (-dbg (str (O-BRACKET) method (C-BRACKET)))))
+    (-method req)
 
-    (-dbg (str (O-BRACKET) "list-customers" (C-BRACKET)))
-
-;   {:headers {
-;       (CONT-TYPE) (MIME-TYPE)
-;   }}
+    {:headers {
+        (CONT-TYPE) (MIME-TYPE)
+    }}
 )
 
 (defn get-customer
@@ -59,38 +64,7 @@
         May return client or server error depending on incoming request."
     {:added "0.1.5"} [req]
 
-;   (let [method- (get req :request-method)]
-;   (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
-;   (-dbg (str (O-BRACKET) method (C-BRACKET)))))
-
-    (-dbg (str (O-BRACKET) "get-customer" (C-BRACKET)))
-
-;   {:headers {
-;       (CONT-TYPE) (MIME-TYPE)
-;   }}
-)
-
-; Request (post-)filters ------------------------------------------------------
-
-(defn any-req-filter
-    "The so-called request post-filter/handler callback.
-    Gets called on each `/*` incoming HTTP request.
-
-    Args:
-        req: A hash map representing the incoming HTTP request object.
-
-    Returns:
-        A specific HTTP status code + the JSON `content-type` response header.
-        May return client or server error depending on incoming request."
-    {:added "0.1.0"} [req]
-
-;   (-dbg (str (O-BRACKET) req (C-BRACKET)))
-
-    (let [method- (get req :request-method)]
-    (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
-    (-dbg (str (O-BRACKET) method (C-BRACKET)))))
-
-;   (-dbg (str (O-BRACKET) @cnx (C-BRACKET)))
+    (-method req)
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
@@ -115,9 +89,6 @@
 ;       (GET (str (SLASH) (COLON) (REST-CUST-ID)
 ;                 (SLASH)         (REST-CONTACTS)
 ;                 (SLASH) (COLON) (REST-CONT-TYPE)) [] list-contacts-by-type))
-
-    ; /*
-    (ANY (ANY-) [] any-req-filter)
 )
 
 ; vim:set nu et ts=4 sw=4:
