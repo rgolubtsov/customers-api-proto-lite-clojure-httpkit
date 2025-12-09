@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/helper.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.6
+; Customers API Lite microservice prototype (Clojure port). Version 0.1.7
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -38,6 +38,10 @@
 (defmacro ERR-SERV-UNKNOWN-REASON []
     "for an unknown reason. Quitting...")
 (defmacro MSG-ADDR-ALREADY-IN-USE [] "Address already in use")
+(defmacro ERR-KEY [] "error")
+(defmacro ERR-REQ-NOT-FOUND-1 [] (str
+    "HTTP 404 Not Found: Bad HTTP method used or no such "
+    "REST URI path exists. Please check your inputs."))
 
 (defmacro SETTINGS "The filename of the daemon settings
     (in edn (Extensible Data Notation) format)." [] "settings.conf")
@@ -47,13 +51,16 @@
 (defmacro DEF-PORT "The default server port number."  [] 8080 )
 
 ; REST URI path-related constants.
-(defmacro REST-VERSION [] "v1"         )
-(defmacro REST-PREFIX  [] "customers"  )
-(defmacro REST-CUST-ID [] "customer_id")
+(defmacro REST-VERSION   [] "v1"          )
+(defmacro REST-PREFIX    [] "customers"   )
+(defmacro REST-CUST-ID   [] "customer_id" )
+(defmacro REST-CONTACTS  [] "contacts"    )
+(defmacro REST-CONT-TYPE [] "contact_type")
 
 ; HTTP response-related constants.
-(defmacro CONT-TYPE [] "content-type"    )
-(defmacro MIME-TYPE [] "application/json")
+(defmacro CONT-TYPE    [] "content-type"    )
+(defmacro MIME-TYPE    [] "application/json")
+(defmacro HDR-LOCATION [] "Location"        )
 
 ; Globals.
 (def s   "The Unix system logger."    (atom {}))
