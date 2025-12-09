@@ -12,12 +12,15 @@
 
 (ns customers.api-lite.controller "The controller namespace of the daemon."
     (:use     [customers.api-lite.helper])
-    (:require [clojure.string :as s     ]
-              [compojure.core :refer    [
+    (:require [clojure.string  :as s    ]
+              [compojure.core  :refer   [
                   defroutes
                   context
                   PUT
                   GET
+              ]]
+              [compojure.route :refer   [
+                  not-found
               ]]))
 
 ; Helper function. Used to expose a request method on incoming HTTP requests.
@@ -197,7 +200,21 @@
 
 (defroutes api-lite-routes
     "The compound request handler callback (Compojure routing facility).
-    Gets called on each incoming HTTP request."
+    Gets called on each incoming HTTP request.
+
+    Allowed and properly handled routes are the following ones:
+
+    ```
+    PUT /v1/customers
+    PUT /v1/customers/contacts
+    GET /v1/customers
+    GET /v1/customers/:customer_id
+    GET /v1/customers/:customer_id/contacts
+    GET /v1/customers/:customer_id/contacts/:contact_type
+    ```
+
+    Accessing routes other than the above will likely end up in getting
+    `404 Not Found` or `405 Method Not Allowed` responses."
     {:added "0.1.5"}
 
     ; /v1/customers
@@ -211,6 +228,16 @@
         (GET (str (SLASH) (COLON) (REST-CUST-ID)
                   (SLASH)         (REST-CONTACTS)
                   (SLASH) (COLON) (REST-CONT-TYPE)) [] list-contacts-by-type))
+
+    ; For any other route Compojure will automatically respond
+    ; with the HTTP 404 Not Found status code.
+    ; FIXME: Replace the hand-made JSON below with a production-grade,
+    ;        lib-based one by incorporating any JSON lib for that.
+    (not-found {:headers {
+        (CONT-TYPE) (MIME-TYPE)
+    } :body
+        (str "{\"" (ERR-KEY) "\"" (COLON) "\"" (ERR-REQ-NOT-FOUND-1) "\"}")
+    })
 )
 
 ; vim:set nu et ts=4 sw=4:

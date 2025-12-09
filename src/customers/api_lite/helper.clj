@@ -38,6 +38,10 @@
 (defmacro ERR-SERV-UNKNOWN-REASON []
     "for an unknown reason. Quitting...")
 (defmacro MSG-ADDR-ALREADY-IN-USE [] "Address already in use")
+(defmacro ERR-KEY [] "error")
+(defmacro ERR-REQ-NOT-FOUND-1 [] (str
+    "HTTP 404 Not Found: Bad HTTP method used or no such "
+    "REST URI path exists. Please check your inputs."))
 
 (defmacro SETTINGS "The filename of the daemon settings
     (in edn (Extensible Data Notation) format)." [] "settings.conf")
