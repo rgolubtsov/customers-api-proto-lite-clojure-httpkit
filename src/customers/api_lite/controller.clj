@@ -33,6 +33,7 @@
 
 (defn add-customer
     "The `PUT /v1/customers` endpoint.
+
     Creates a new customer (puts customer data to the database).
 
     The request body is defined exactly in the form
@@ -67,6 +68,7 @@
 
 (defn add-contact
     "The `PUT /v1/customers/contacts` endpoint.
+
     Creates a new contact for a given customer (puts a contact
     regarding a given customer to the database).
 
@@ -106,6 +108,7 @@
 
 (defn list-customers
     "The `GET /v1/customers` endpoint.
+
     Retrieves from the database and lists all customer profiles.
 
     Args:
@@ -126,6 +129,7 @@
 
 (defn get-customer
     "The `GET /v1/customers/{customer_id}` endpoint.
+
     Retrieves profile details for a given customer from the database.
 
     Args:
@@ -144,10 +148,55 @@
     }}
 )
 
+(defn list-contacts
+    "The `GET /v1/customers/{customer_id}/contacts` endpoint.
+
+    Retrieves from the database and lists all contacts
+    associated with a given customer.
+
+    Args:
+        req: A hash map representing the incoming HTTP request object.
+
+    Returns:
+        HTTP status code `200 OK` and the response body in JSON representation,
+        containing a list of all contacts associated with a given customer.
+        May return client or server error depending on incoming request."
+    {:added "0.1.6"} [req]
+
+    (-method req)
+
+    {:headers {
+        (CONT-TYPE) (MIME-TYPE)
+    }}
+)
+
+(defn list-contacts-by-type
+    "The `GET /v1/customers/{customer_id}/contacts/{contact_type}` endpoint.
+
+    Retrieves from the database and lists all contacts of a given type
+    associated with a given customer.
+
+    Args:
+        req: A hash map representing the incoming HTTP request object.
+
+    Returns:
+        HTTP status code `200 OK` and the response body in JSON representation,
+        containing a list of all contacts of a given type
+        associated with a given customer.
+        May return client or server error depending on incoming request."
+    {:added "0.1.6"} [req]
+
+    (-method req)
+
+    {:headers {
+        (CONT-TYPE) (MIME-TYPE)
+    }}
+)
+
 ; -----------------------------------------------------------------------------
 
 (defroutes api-lite-routes
-    "The compound request handler callback (Compojure middleware).
+    "The compound request handler callback (Compojure routing facility).
     Gets called on each incoming HTTP request."
     {:added "0.1.5"}
 
@@ -156,12 +205,12 @@
         (PUT      (SLASH)                           []  add-customer )
         (PUT (str (SLASH)         (REST-CONTACTS))  []  add-contact  )
         (GET      (SLASH)                           [] list-customers)
-        (GET (str (SLASH) (COLON) (REST-CUST-ID))   []  get-customer ))
-;       (GET (str (SLASH) (COLON) (REST-CUST-ID)
-;                 (SLASH)         (REST-CONTACTS))  [] list-contacts )
-;       (GET (str (SLASH) (COLON) (REST-CUST-ID)
-;                 (SLASH)         (REST-CONTACTS)
-;                 (SLASH) (COLON) (REST-CONT-TYPE)) [] list-contacts-by-type))
+        (GET (str (SLASH) (COLON) (REST-CUST-ID))   []  get-customer )
+        (GET (str (SLASH) (COLON) (REST-CUST-ID)
+                  (SLASH)         (REST-CONTACTS))  [] list-contacts )
+        (GET (str (SLASH) (COLON) (REST-CUST-ID)
+                  (SLASH)         (REST-CONTACTS)
+                  (SLASH) (COLON) (REST-CONT-TYPE)) [] list-contacts-by-type))
 )
 
 ; vim:set nu et ts=4 sw=4:

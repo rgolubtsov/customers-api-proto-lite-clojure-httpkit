@@ -47,10 +47,11 @@
 (defmacro DEF-PORT "The default server port number."  [] 8080 )
 
 ; REST URI path-related constants.
-(defmacro REST-VERSION  [] "v1"         )
-(defmacro REST-PREFIX   [] "customers"  )
-(defmacro REST-CUST-ID  [] "customer_id")
-(defmacro REST-CONTACTS [] "contacts"   )
+(defmacro REST-VERSION   [] "v1"          )
+(defmacro REST-PREFIX    [] "customers"   )
+(defmacro REST-CUST-ID   [] "customer_id" )
+(defmacro REST-CONTACTS  [] "contacts"    )
+(defmacro REST-CONT-TYPE [] "contact_type")
 
 ; HTTP response-related constants.
 (defmacro CONT-TYPE    [] "content-type"    )
