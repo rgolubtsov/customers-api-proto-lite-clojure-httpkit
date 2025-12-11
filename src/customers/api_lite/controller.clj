@@ -12,14 +12,17 @@
 
 (ns customers.api-lite.controller "The controller namespace of the daemon."
     (:use     [customers.api-lite.helper])
-    (:require [clojure.string  :as s    ]
-              [compojure.core  :refer   [
+    (:require [clojure.string    :as s  ]
+              [clojure.data.json :refer [
+                  write-str
+              ]]
+              [compojure.core    :refer [
                   defroutes
                   context
                   PUT
                   GET
               ]]
-              [compojure.route :refer   [
+              [compojure.route   :refer [
                   not-found
               ]]))
 
@@ -231,12 +234,10 @@
 
     ; For any other route Compojure will automatically respond
     ; with the HTTP 404 Not Found status code.
-    ; FIXME: Replace the hand-made JSON below with a production-grade,
-    ;        lib-based one by incorporating any JSON lib for that.
     (not-found {:headers {
         (CONT-TYPE) (MIME-TYPE)
     } :body
-        (str "{\"" (ERR-KEY) "\"" (COLON) "\"" (ERR-REQ-NOT-FOUND-1) "\"}")
+        (write-str {:error (ERR-REQ-NOT-FOUND-1)})
     })
 )
 
