@@ -27,6 +27,7 @@
         [org.xerial/sqlite-jdbc            "3.50.3.0"]
         [http-kit                          "2.8.1"   ]
         [compojure                         "1.7.2"   ]
+        [org.clojure/data.json             "2.5.1"   ]
     ]
     :main ^:skip-aot customers.api-lite.core
     :target-path     "target/%s"
