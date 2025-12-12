@@ -130,7 +130,12 @@
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
-    }}
+    } :body
+        (write-str [
+            {:id 1 :name (COLON)}
+            {:id 2 :name (SLASH)}
+        ])
+    }
 )
 
 (defn get-customer
@@ -151,7 +156,9 @@
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
-    }}
+    } :body
+        (write-str {:id 3 :name (COLON)})
+    }
 )
 
 (defn list-contacts
@@ -173,7 +180,14 @@
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
-    }}
+    } :body
+        (write-str [
+            {:contact (COLON)}
+            {:contact (SLASH)}
+            {:contact (O-BRACKET)}
+            {:contact (C-BRACKET)}
+        ])
+    }
 )
 
 (defn list-contacts-by-type
@@ -196,7 +210,12 @@
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
-    }}
+    } :body
+        (write-str [
+            {:contact (COLON)}
+            {:contact (SLASH)}
+        ])
+    }
 )
 
 ; -----------------------------------------------------------------------------
