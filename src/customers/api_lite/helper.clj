@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/helper.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.7
+; Customers API Lite microservice prototype (Clojure port). Version 0.1.8
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -38,7 +38,6 @@
 (defmacro ERR-SERV-UNKNOWN-REASON []
     "for an unknown reason. Quitting...")
 (defmacro MSG-ADDR-ALREADY-IN-USE [] "Address already in use")
-(defmacro ERR-KEY [] "error")
 (defmacro ERR-REQ-NOT-FOUND-1 [] (str
     "HTTP 404 Not Found: Bad HTTP method used or no such "
     "REST URI path exists. Please check your inputs."))

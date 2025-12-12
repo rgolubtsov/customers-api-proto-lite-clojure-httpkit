@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/controller.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.7
+; Customers API Lite microservice prototype (Clojure port). Version 0.1.8
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -12,14 +12,17 @@
 
 (ns customers.api-lite.controller "The controller namespace of the daemon."
     (:use     [customers.api-lite.helper])
-    (:require [clojure.string  :as s    ]
-              [compojure.core  :refer   [
+    (:require [clojure.string    :as s  ]
+              [clojure.data.json :refer [
+                  write-str
+              ]]
+              [compojure.core    :refer [
                   defroutes
                   context
                   PUT
                   GET
               ]]
-              [compojure.route :refer   [
+              [compojure.route   :refer [
                   not-found
               ]]))
 
@@ -127,7 +130,12 @@
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
-    }}
+    } :body
+        (write-str [
+            {:id 1 :name (COLON)}
+            {:id 2 :name (SLASH)}
+        ])
+    }
 )
 
 (defn get-customer
@@ -148,7 +156,9 @@
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
-    }}
+    } :body
+        (write-str {:id 3 :name (COLON)})
+    }
 )
 
 (defn list-contacts
@@ -170,7 +180,14 @@
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
-    }}
+    } :body
+        (write-str [
+            {:contact (COLON)}
+            {:contact (SLASH)}
+            {:contact (O-BRACKET)}
+            {:contact (C-BRACKET)}
+        ])
+    }
 )
 
 (defn list-contacts-by-type
@@ -193,7 +210,12 @@
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
-    }}
+    } :body
+        (write-str [
+            {:contact (COLON)}
+            {:contact (SLASH)}
+        ])
+    }
 )
 
 ; -----------------------------------------------------------------------------
@@ -231,12 +253,10 @@
 
     ; For any other route Compojure will automatically respond
     ; with the HTTP 404 Not Found status code.
-    ; FIXME: Replace the hand-made JSON below with a production-grade,
-    ;        lib-based one by incorporating any JSON lib for that.
     (not-found {:headers {
         (CONT-TYPE) (MIME-TYPE)
     } :body
-        (str "{\"" (ERR-KEY) "\"" (COLON) "\"" (ERR-REQ-NOT-FOUND-1) "\"}")
+        (write-str {:error (ERR-REQ-NOT-FOUND-1)})
     })
 )
 
