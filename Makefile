@@ -1,7 +1,7 @@
 #
 # Makefile
 # =============================================================================
-# Customers API Lite microservice prototype (Clojure port). Version 0.1.7
+# Customers API Lite microservice prototype (Clojure port). Version 0.1.8
 # =============================================================================
 # A daemon written in Clojure, designed and intended to be run
 # as a microservice, implementing a special Customers API prototype
@@ -29,7 +29,7 @@ $(SRV):
 $(JAR):
 	$(LEIN) $(UBERJAR) && \
 	DAEMON_NAME="customers-api-lite"; \
-	DMN_VERSION="0.1.7"; \
+	DMN_VERSION="0.1.8"; \
 	SIMPLE_JAR="$(JAR)/$${DAEMON_NAME}-$${DMN_VERSION}.jar"; \
 	BUNDLE_JAR="$(JAR)/$${DAEMON_NAME}-$${DMN_VERSION}-standalone.jar"; \
 	$(RM) $${SIMPLE_JAR} && $(MV) $${BUNDLE_JAR} $${SIMPLE_JAR} && \
