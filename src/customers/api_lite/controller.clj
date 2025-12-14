@@ -11,10 +11,14 @@
 ;
 
 (ns customers.api-lite.controller "The controller namespace of the daemon."
-    (:use     [customers.api-lite.helper])
+    (:use     [customers.api-lite.helper]
+              [customers.api-lite.model ])
     (:require [clojure.string    :as s  ]
               [clojure.data.json :refer [
                   write-str
+              ]]
+              [next.jdbc         :refer [
+                  execute!
               ]]
               [compojure.core    :refer [
                   defroutes
@@ -128,14 +132,15 @@
 
     (-method req)
 
+    ; Retrieving all customer profiles from the database.
+    (let [customers (execute! @cnx [(SQL-GET-ALL-CUSTOMERS)])]
+    (-dbg (str (O-BRACKET) customers (C-BRACKET)))
+
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
     } :body
-        (write-str [
-            {:id 1 :name (COLON)}
-            {:id 2 :name (SLASH)}
-        ])
-    }
+        (write-str customers)
+    })
 )
 
 (defn get-customer
@@ -154,11 +159,19 @@
 
     (-method req)
 
+    (let [customer_id- (get req :params)]
+    (let [customer_id  (get customer_id- :customer_id)]
+    (-dbg (str (O-BRACKET) customer_id (C-BRACKET)))
+
+    ; Retrieving profile details for a given customer from the database.
+    (let [customer (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) customer_id])]
+    (-dbg (str (O-BRACKET) customer (C-BRACKET)))
+
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
     } :body
-        (write-str {:id 3 :name (COLON)})
-    }
+        (write-str customer)
+    })))
 )
 
 (defn list-contacts
