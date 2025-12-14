@@ -18,13 +18,13 @@
         :url  "https://raw.githubusercontent.com/rgolubtsov/customers-api-proto-lite-clojure-httpkit/main/LICENSE"
     }
     :dependencies [
-        [org.clojure/clojure               "1.12.3"  ]
+        [org.clojure/clojure               "1.12.4"  ]
         [org.clojure/tools.logging         "1.3.0"   ]
         [org.slf4j/slf4j-reload4j          "2.0.17"  ]
         [org.graylog2/syslog4j             "0.9.61"  ]
-        [net.java.dev.jna/jna              "5.18.0"  ]
+        [net.java.dev.jna/jna              "5.18.1"  ]
         [com.github.seancorfield/next.jdbc "1.3.1070"]
-        [org.xerial/sqlite-jdbc            "3.50.3.0"]
+        [org.xerial/sqlite-jdbc            "3.51.1.0"]
         [http-kit                          "2.8.1"   ]
         [compojure                         "1.7.2"   ]
         [org.clojure/data.json             "2.5.1"   ]
