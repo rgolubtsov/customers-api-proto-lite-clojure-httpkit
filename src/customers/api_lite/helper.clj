@@ -21,6 +21,7 @@
 (defmacro COLON        [] ":")
 (defmacro SLASH        [] "/")
 (defmacro V-BAR        [] "|")
+(defmacro EQUALS       [] "=")
 (defmacro O-BRACKET    [] "[")
 (defmacro C-BRACKET    [] "]")
 

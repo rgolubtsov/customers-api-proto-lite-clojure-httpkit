@@ -164,13 +164,17 @@
 
     (-method req)
 
-    (let [customer_id- (get req :params)]
-    (let [customer_id  (get customer_id- :customer_id)]
-    (-dbg (str (O-BRACKET) customer_id (C-BRACKET)))
+    (let [customer-id (-> req :params :customer_id)]
+    (-dbg (str (REST-CUST-ID) (EQUALS) customer-id))
 
     ; Retrieving profile details for a given customer from the database.
-    (let [customer (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) customer_id])]
-    (-dbg (str (O-BRACKET) customer (C-BRACKET)))
+    (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) customer-id])]
+    (-dbg (str (O-BRACKET) customer- (C-BRACKET)))
+
+    (let [customer (nth customer- 0)]
+    (-dbg (str (O-BRACKET) (get customer :customers/id  ) ; getId()
+               (V-BAR)     (get customer :customers/name) ; getName()
+               (C-BRACKET)))
 
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
