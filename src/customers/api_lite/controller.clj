@@ -136,6 +136,11 @@
     (let [customers (execute! @cnx [(SQL-GET-ALL-CUSTOMERS)])]
     (-dbg (str (O-BRACKET) customers (C-BRACKET)))
 
+    (let [customer0 (nth customers 0)]
+    (-dbg (str (O-BRACKET) (get customer0 :customers/id  ) ; getId()
+               (V-BAR)     (get customer0 :customers/name) ; getName()
+               (C-BRACKET))))
+
     {:headers {
         (CONT-TYPE) (MIME-TYPE)
     } :body
