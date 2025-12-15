@@ -134,7 +134,6 @@
 
     ; Retrieving all customer profiles from the database.
     (let [customers (execute! @cnx [(SQL-GET-ALL-CUSTOMERS)])]
-    (-dbg (str (O-BRACKET) customers (C-BRACKET)))
 
     (let [customer0 (nth customers 0)]
     (-dbg (str (O-BRACKET) (get customer0 :customers/id  ) ; getId()
@@ -169,7 +168,6 @@
 
     ; Retrieving profile details for a given customer from the database.
     (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) customer-id])]
-    (-dbg (str (O-BRACKET) customer- (C-BRACKET)))
 
     (let [customer (nth customer- 0)]
     (-dbg (str (O-BRACKET) (get customer :customers/id  ) ; getId()
