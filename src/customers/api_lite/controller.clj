@@ -39,6 +39,17 @@
     (-dbg (str (O-BRACKET) method (C-BRACKET)))))
 )
 
+; Helper function. Used to send an HTTP response.
+(defn -response [body headers status]
+    (let [resp   {:headers {(CONT-TYPE) (MIME-TYPE)}  :body (write-str  body)}]
+    (-dbg (str (O-BRACKET) resp   (C-BRACKET)))
+    (let [resp-  (if-not (nil? headers) (merge resp  {:headers headers}) resp)]
+    (-dbg (str (O-BRACKET) resp-  (C-BRACKET)))
+    (let [resp-- (if-not (nil? status ) (merge resp- {:status status})  resp-)]
+    (-dbg (str (O-BRACKET) resp-- (C-BRACKET)))
+    resp--)))
+)
+
 ; REST API endpoints ----------------------------------------------------------
 
 (defn add-customer
@@ -68,12 +79,13 @@
 
     (-method req)
 
-    {:status 201 :headers {
+    ; TODO: Create a new customer (put customer data to the database).
+
+    (-response (str) {
         (HDR-LOCATION) (str (SLASH) (REST-VERSION)
                             (SLASH) (REST-PREFIX)
-                            (SLASH) "?")
-        (CONT-TYPE) (MIME-TYPE)
-    }}
+                            (SLASH) (EQUALS))
+    } 201)
 )
 
 (defn add-contact
@@ -106,14 +118,16 @@
 
     (-method req)
 
-    {:status 201 :headers {
+    ; TODO: Create a new contact (put a contact regarding a given customer
+    ;       to the database).
+
+    (-response (str) {
         (HDR-LOCATION) (str (SLASH) (REST-VERSION)
                             (SLASH) (REST-PREFIX)
-                            (SLASH) "?"
+                            (SLASH) (EQUALS)
                             (SLASH) (REST-CONTACTS)
-                            (SLASH) "?")
-        (CONT-TYPE) (MIME-TYPE)
-    }}
+                            (SLASH) (EQUALS))
+    } 201)
 )
 
 (defn list-customers
@@ -140,11 +154,7 @@
                (V-BAR)     (get customer0 :customers/name) ; getName()
                (C-BRACKET))))
 
-    {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str customers)
-    })
+    (-response customers nil nil))
 )
 
 (defn get-customer
@@ -174,11 +184,7 @@
                (V-BAR)     (get customer :customers/name) ; getName()
                (C-BRACKET)))
 
-    {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str customer)
-    })))
+    (-response customer nil nil))))
 )
 
 (defn list-contacts
@@ -198,16 +204,15 @@
 
     (-method req)
 
-    {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str [
-            {:contact (COLON)}
-            {:contact (SLASH)}
-            {:contact (O-BRACKET)}
-            {:contact (C-BRACKET)}
-        ])
-    }
+    ; TODO: Retrieve all contacts associated with a given customer
+    ;       from the database.
+
+    (-response [
+        {:contact (COLON)}
+        {:contact (SLASH)}
+        {:contact (O-BRACKET)}
+        {:contact (C-BRACKET)}
+    ] nil nil)
 )
 
 (defn list-contacts-by-type
@@ -228,14 +233,13 @@
 
     (-method req)
 
-    {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str [
-            {:contact (COLON)}
-            {:contact (SLASH)}
-        ])
-    }
+    ; TODO: Retrieve all contacts of a given type associated
+    ;       with a given customer from the database.
+
+    (-response [
+        {:contact (COLON)}
+        {:contact (SLASH)}
+    ] nil nil)
 )
 
 ; -----------------------------------------------------------------------------
