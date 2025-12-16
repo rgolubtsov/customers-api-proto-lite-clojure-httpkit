@@ -41,11 +41,17 @@
 
 ; Helper function. Used to send an HTTP response.
 (defn -response [body headers status]
-    (let [resp   {:headers {(CONT-TYPE) (MIME-TYPE)}  :body (write-str  body)}]
+    (let [resp {:body (write-str body) :headers {(CONT-TYPE) (MIME-TYPE)}}]
     (-dbg (str (O-BRACKET) resp   (C-BRACKET)))
-    (let [resp-  (if-not (nil? headers) (merge resp  {:headers headers}) resp)]
+    (let [resp-  (if-not (nil? headers)
+        (assoc-in resp  [:headers] (into (:headers resp) headers))
+        resp
+    )]
     (-dbg (str (O-BRACKET) resp-  (C-BRACKET)))
-    (let [resp-- (if-not (nil? status ) (merge resp- {:status status})  resp-)]
+    (let [resp-- (if-not (nil? status)
+        (assoc-in resp- [:status] status)
+        resp-
+    )]
     (-dbg (str (O-BRACKET) resp-- (C-BRACKET)))
     resp--)))
 )
