@@ -42,17 +42,14 @@
 ; Helper function. Used to send an HTTP response.
 (defn -response [body headers status]
     (let [resp {:body (write-str body) :headers {(CONT-TYPE) (MIME-TYPE)}}]
-    (-dbg (str (O-BRACKET) resp   (C-BRACKET)))
     (let [resp-  (if-not (nil? headers)
         (assoc-in resp  [:headers] (into (:headers resp) headers))
         resp
     )]
-    (-dbg (str (O-BRACKET) resp-  (C-BRACKET)))
     (let [resp-- (if-not (nil? status)
         (assoc-in resp- [:status] status)
         resp-
     )]
-    (-dbg (str (O-BRACKET) resp-- (C-BRACKET)))
     resp--)))
 )
 
@@ -283,10 +280,9 @@
 
     ; For any other route Compojure will automatically respond
     ; with the HTTP 404 Not Found status code.
-    (not-found {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str {:error (ERR-REQ-NOT-FOUND-1)})
+    (not-found {
+        :body (write-str {:error (ERR-REQ-NOT-FOUND-1)})
+        :headers {(CONT-TYPE) (MIME-TYPE)}
     })
 )
 
