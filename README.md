@@ -57,7 +57,7 @@ $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
   DAEMON_NAME="customers-api-lite"; \
-  DMN_VERSION="0.1.8"; \
+  DMN_VERSION="0.1.9"; \
   SIMPLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}.jar"; \
   BUNDLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}-standalone.jar"; \
   rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR} && \
@@ -68,8 +68,8 @@ $ lein uberjar && \
 Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.8.jar
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.8-standalone.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.9.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.9-standalone.jar
 ```
 
 Or **build** the microservice using **GNU Make** (optional, but for convenience &mdash; it covers the same **Leiningen** build workflow under the hood):
@@ -95,14 +95,14 @@ $ lein run; echo $?
 **Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task or GNU Make's `all` target:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.1.8.jar; echo $?
+$ java -jar target/uberjar/customers-api-lite-0.1.9.jar; echo $?
 ...
 ```
 
 To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.1.8.jar > /dev/null 2>&1 &
+$ java -jar target/uberjar/customers-api-lite-0.1.9.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 
@@ -113,7 +113,7 @@ The daemonized microservice then can be stopped gracefully at any time by issuin
 ```
 $ kill -SIGTERM <pid>
 $
-[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.1.8.jar > /dev/null 2>&1
+[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.1.9.jar > /dev/null 2>&1
 ```
 
 ## Consuming
@@ -147,15 +147,32 @@ The following command-line snippets display the exact usage for these endpoints 
 3. **List customers**
 
 ```
-$ curl -v http://localhost:8765
+$ curl -v http://localhost:8765/v1/customers
 ...
+> GET /v1/customers HTTP/1.1
+...
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< content-length: 66
+< Server: http-kit
+...
+[{"id":1,"name":"Jammy Jellyfish"},{"id":2,"name":"Noble Numbat"}]
 ```
-
-**TBD** :cd:
 
 4. **Retrieve customer**
 
-**TBD** :cd:
+```
+$ curl -v http://localhost:8765/v1/customers/2
+...
+> GET /v1/customers/2 HTTP/1.1
+...
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< content-length: 30
+< Server: http-kit
+...
+{"id":2,"name":"Noble Numbat"}
+```
 
 5. **List contacts for a given customer**
 
@@ -171,11 +188,15 @@ The microservice has the ability to log messages to a logfile and to the Unix sy
 
 ```
 $ tail -f log/customers-api-lite.log
-[2025-11-29][01:30:20] [DEBUG] [Customers API Lite]
-[2025-11-29][01:30:20] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@7a583586]
-[2025-11-29][01:30:20] [INFO ] Server started on port 8765
-[2025-11-29][01:30:30] [DEBUG] [GET]
-[2025-11-29][01:30:40] [INFO ] Server stopped
+[2025-12-17][02:10:20] [DEBUG] [Customers API Lite]
+[2025-12-17][02:10:20] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@4e61a863]
+[2025-12-17][02:10:20] [INFO ] Server started on port 8765
+[2025-12-17][02:10:30] [DEBUG] [GET]
+[2025-12-17][02:10:30] [DEBUG] [1|Jammy Jellyfish]
+[2025-12-17][02:10:40] [DEBUG] [GET]
+[2025-12-17][02:10:40] [DEBUG] customer_id=2
+[2025-12-17][02:10:40] [DEBUG] [2|Noble Numbat]
+[2025-12-17][02:10:50] [INFO ] Server stopped
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -183,11 +204,15 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Nov 29 01:30:20 <hostname> java[<pid>]: [Customers API Lite]
-Nov 29 01:30:20 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@7a583586]
-Nov 29 01:30:20 <hostname> java[<pid>]: Server started on port 8765
-Nov 29 01:30:30 <hostname> java[<pid>]: [GET]
-Nov 29 01:30:40 <hostname> java[<pid>]: Server stopped
+Dec 17 02:10:20 <hostname> java[<pid>]: [Customers API Lite]
+Dec 17 02:10:20 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@4e61a863]
+Dec 17 02:10:20 <hostname> java[<pid>]: Server started on port 8765
+Dec 17 02:10:30 <hostname> java[<pid>]: [GET]
+Dec 17 02:10:30 <hostname> java[<pid>]: [1|Jammy Jellyfish]
+Dec 17 02:10:40 <hostname> java[<pid>]: [GET]
+Dec 17 02:10:40 <hostname> java[<pid>]: customer_id=2
+Dec 17 02:10:40 <hostname> java[<pid>]: [2|Noble Numbat]
+Dec 17 02:10:50 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:

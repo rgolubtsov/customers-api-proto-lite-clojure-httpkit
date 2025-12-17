@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/controller.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.8
+; Customers API Lite microservice prototype (Clojure port). Version 0.1.9
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -11,10 +11,14 @@
 ;
 
 (ns customers.api-lite.controller "The controller namespace of the daemon."
-    (:use     [customers.api-lite.helper])
+    (:use     [customers.api-lite.helper]
+              [customers.api-lite.model ])
     (:require [clojure.string    :as s  ]
               [clojure.data.json :refer [
                   write-str
+              ]]
+              [next.jdbc         :refer [
+                  execute!
               ]]
               [compojure.core    :refer [
                   defroutes
@@ -33,6 +37,20 @@
     (let [method- (get req :request-method)]
     (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
     (-dbg (str (O-BRACKET) method (C-BRACKET)))))
+)
+
+; Helper function. Used to send an HTTP response.
+(defn -response [body headers status]
+    (let [resp {:body (write-str body) :headers {(CONT-TYPE) (MIME-TYPE)}}]
+    (let [resp-  (if-not (nil? headers)
+        (assoc-in resp  [:headers] (into (:headers resp) headers))
+        resp
+    )]
+    (let [resp-- (if-not (nil? status)
+        (assoc-in resp- [:status] status)
+        resp-
+    )]
+    resp--)))
 )
 
 ; REST API endpoints ----------------------------------------------------------
@@ -64,12 +82,13 @@
 
     (-method req)
 
-    {:status 201 :headers {
+    ; TODO: Create a new customer (put customer data to the database).
+
+    (-response (str) {
         (HDR-LOCATION) (str (SLASH) (REST-VERSION)
                             (SLASH) (REST-PREFIX)
-                            (SLASH) "?")
-        (CONT-TYPE) (MIME-TYPE)
-    }}
+                            (SLASH) (EQUALS))
+    } 201)
 )
 
 (defn add-contact
@@ -102,14 +121,16 @@
 
     (-method req)
 
-    {:status 201 :headers {
+    ; TODO: Create a new contact (put a contact regarding a given customer
+    ;       to the database).
+
+    (-response (str) {
         (HDR-LOCATION) (str (SLASH) (REST-VERSION)
                             (SLASH) (REST-PREFIX)
-                            (SLASH) "?"
+                            (SLASH) (EQUALS)
                             (SLASH) (REST-CONTACTS)
-                            (SLASH) "?")
-        (CONT-TYPE) (MIME-TYPE)
-    }}
+                            (SLASH) (EQUALS))
+    } 201)
 )
 
 (defn list-customers
@@ -128,14 +149,15 @@
 
     (-method req)
 
-    {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str [
-            {:id 1 :name (COLON)}
-            {:id 2 :name (SLASH)}
-        ])
-    }
+    ; Retrieving all customer profiles from the database.
+    (let [customers (execute! @cnx [(SQL-GET-ALL-CUSTOMERS)])]
+
+    (let [customer0 (nth customers 0)]
+    (-dbg (str (O-BRACKET) (get customer0 :customers/id  ) ; getId()
+               (V-BAR)     (get customer0 :customers/name) ; getName()
+               (C-BRACKET))))
+
+    (-response customers nil nil))
 )
 
 (defn get-customer
@@ -154,11 +176,18 @@
 
     (-method req)
 
-    {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str {:id 3 :name (COLON)})
-    }
+    (let [customer-id (-> req :params :customer_id)]
+    (-dbg (str (REST-CUST-ID) (EQUALS) customer-id))
+
+    ; Retrieving profile details for a given customer from the database.
+    (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) customer-id])]
+
+    (let [customer (nth customer- 0)]
+    (-dbg (str (O-BRACKET) (get customer :customers/id  ) ; getId()
+               (V-BAR)     (get customer :customers/name) ; getName()
+               (C-BRACKET)))
+
+    (-response customer nil nil))))
 )
 
 (defn list-contacts
@@ -178,16 +207,15 @@
 
     (-method req)
 
-    {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str [
-            {:contact (COLON)}
-            {:contact (SLASH)}
-            {:contact (O-BRACKET)}
-            {:contact (C-BRACKET)}
-        ])
-    }
+    ; TODO: Retrieve all contacts associated with a given customer
+    ;       from the database.
+
+    (-response [
+        {:contact (COLON)}
+        {:contact (SLASH)}
+        {:contact (O-BRACKET)}
+        {:contact (C-BRACKET)}
+    ] nil nil)
 )
 
 (defn list-contacts-by-type
@@ -208,14 +236,13 @@
 
     (-method req)
 
-    {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str [
-            {:contact (COLON)}
-            {:contact (SLASH)}
-        ])
-    }
+    ; TODO: Retrieve all contacts of a given type associated
+    ;       with a given customer from the database.
+
+    (-response [
+        {:contact (COLON)}
+        {:contact (SLASH)}
+    ] nil nil)
 )
 
 ; -----------------------------------------------------------------------------
@@ -253,10 +280,9 @@
 
     ; For any other route Compojure will automatically respond
     ; with the HTTP 404 Not Found status code.
-    (not-found {:headers {
-        (CONT-TYPE) (MIME-TYPE)
-    } :body
-        (write-str {:error (ERR-REQ-NOT-FOUND-1)})
+    (not-found {
+        :body (write-str {:error (ERR-REQ-NOT-FOUND-1)})
+        :headers {(CONT-TYPE) (MIME-TYPE)}
     })
 )
 
