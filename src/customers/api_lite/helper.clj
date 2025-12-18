@@ -40,6 +40,8 @@
 (defmacro ERR-SERV-UNKNOWN-REASON []
     "for an unknown reason. Quitting...")
 (defmacro MSG-ADDR-ALREADY-IN-USE [] "Address already in use")
+(defmacro ERR-REQ-MALFORMED []
+    "HTTP 400 Bad Request: Request is malformed. Please check your inputs.")
 (defmacro ERR-REQ-NOT-FOUND-1 [] (str
     "HTTP 404 Not Found: Bad HTTP method used or no such "
     "REST URI path exists. Please check your inputs."))
