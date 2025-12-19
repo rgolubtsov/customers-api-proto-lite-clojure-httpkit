@@ -60,6 +60,10 @@
 (defmacro REST-CONTACTS  [] "contacts"    )
 (defmacro REST-CONT-TYPE [] "contact_type")
 
+; HTTP response status codes.
+(defmacro HTTP-201 [] 201)
+(defmacro HTTP-400 [] 400)
+
 ; HTTP response-related constants.
 (defmacro CONT-TYPE    [] "content-type"    )
 (defmacro MIME-TYPE    [] "application/json")

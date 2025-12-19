@@ -89,7 +89,7 @@
         (HDR-LOCATION) (str (SLASH) (REST-VERSION)
                             (SLASH) (REST-PREFIX)
                             (SLASH) (EQUALS))
-    } 201)
+    } (HTTP-201))
 )
 
 (defn add-contact
@@ -131,7 +131,7 @@
                             (SLASH) (EQUALS)
                             (SLASH) (REST-CONTACTS)
                             (SLASH) (EQUALS))
-    } 201)
+    } (HTTP-201))
 )
 
 (defn list-customers
@@ -187,7 +187,7 @@
     (catch NumberFormatException e 0))]
 
     (if (== cust-id 0)
-        (-response {:error (ERR-REQ-MALFORMED)} nil 400)
+        (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
     (do
         ; Retrieving profile details for a given customer from the database.
         (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) cust-id])]
