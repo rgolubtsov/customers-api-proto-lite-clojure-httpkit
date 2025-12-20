@@ -47,6 +47,9 @@
     "REST URI path exists. Please check your inputs."))
 (defmacro ERR-REQ-NOT-FOUND-2 []
     "HTTP 404 Not Found: No such customer exists.")
+(defmacro ERR-REQ-NOT-FOUND-3 [] (str
+    "HTTP 404 Not Found: No contacts belonging to a given customer exist, "
+    "or no such customer exists."))
 
 (defmacro SETTINGS "The filename of the daemon settings
     (in edn (Extensible Data Notation) format)." [] "settings.conf")

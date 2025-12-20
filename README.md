@@ -53,6 +53,7 @@ $ lein compile :all
 Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
+Compiling customers.api-lite.model
 $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
@@ -68,6 +69,7 @@ $ lein uberjar && \
 Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
+Compiling customers.api-lite.model
 Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.9.jar
 Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.9-standalone.jar
 ```
@@ -176,7 +178,18 @@ $ curl -v http://localhost:8765/v1/customers/2
 
 5. **List contacts for a given customer**
 
-**TBD** :cd:
+```
+$ curl -v http://localhost:8765/v1/customers/2/contacts
+...
+> GET /v1/customers/2/contacts HTTP/1.1
+...
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< content-length: 190
+< Server: http-kit
+...
+[{"contact":"+35760X123456"},{"contact":"+35760Y1234578"},{"contact":"+35790Z12345890"},{"contact":"nn@example.org"},{"contact":"nnumbat@example.com"},{"contact":"noble.numbat@example.com"}]
+```
 
 6. **List contacts of a given type for a given customer**
 
