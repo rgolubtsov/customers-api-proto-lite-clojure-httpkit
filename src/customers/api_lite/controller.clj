@@ -14,6 +14,7 @@
     (:use     [customers.api-lite.helper]
               [customers.api-lite.model ])
     (:require [clojure.string    :as s  ]
+              [clojure.edn       :as edn]
               [clojure.data.json :refer [
                   write-str
               ]]
@@ -88,7 +89,7 @@
         (HDR-LOCATION) (str (SLASH) (REST-VERSION)
                             (SLASH) (REST-PREFIX)
                             (SLASH) (EQUALS))
-    } 201)
+    } (HTTP-201))
 )
 
 (defn add-contact
@@ -130,7 +131,7 @@
                             (SLASH) (EQUALS)
                             (SLASH) (REST-CONTACTS)
                             (SLASH) (EQUALS))
-    } 201)
+    } (HTTP-201))
 )
 
 (defn list-customers
@@ -179,15 +180,29 @@
     (let [customer-id (-> req :params :customer_id)]
     (-dbg (str (REST-CUST-ID) (EQUALS) customer-id))
 
-    ; Retrieving profile details for a given customer from the database.
-    (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) customer-id])]
+    ; Trying to parse and validate the request path variable.
+    (let [cust-id (try
+        (let [cust-id- (edn/read-string customer-id)]
+        (if-not (number? cust-id-) 0 cust-id-))
+    (catch NumberFormatException e 0))]
 
-    (let [customer (nth customer- 0)]
-    (-dbg (str (O-BRACKET) (get customer :customers/id  ) ; getId()
-               (V-BAR)     (get customer :customers/name) ; getName()
-               (C-BRACKET)))
+    (if (== cust-id 0)
+        (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
+    (do
+        ; Retrieving profile details for a given customer from the database.
+        (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) cust-id])]
 
-    (-response customer nil nil))))
+        (if (== (count customer-) 0)
+            (-response {:error (ERR-REQ-NOT-FOUND-2)} nil (HTTP-404))
+        (do
+            (let [customer (nth customer- 0)]
+            (-dbg (str (O-BRACKET) (get customer :customers/id  ) ; getId()
+                       (V-BAR)     (get customer :customers/name) ; getName()
+                       (C-BRACKET)))
+
+            (-response customer nil nil))
+        )))
+    ))))
 )
 
 (defn list-contacts
