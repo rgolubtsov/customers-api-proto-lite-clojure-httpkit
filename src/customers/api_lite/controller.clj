@@ -192,12 +192,16 @@
         ; Retrieving profile details for a given customer from the database.
         (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) cust-id])]
 
-        (let [customer (nth customer- 0)]
-        (-dbg (str (O-BRACKET) (get customer :customers/id  ) ; getId()
-                   (V-BAR)     (get customer :customers/name) ; getName()
-                   (C-BRACKET)))
+        (if (== (count customer-) 0)
+            (-response {:error (ERR-REQ-NOT-FOUND-2)} nil (HTTP-404))
+        (do
+            (let [customer (nth customer- 0)]
+            (-dbg (str (O-BRACKET) (get customer :customers/id  ) ; getId()
+                       (V-BAR)     (get customer :customers/name) ; getName()
+                       (C-BRACKET)))
 
-        (-response customer nil nil)))
+            (-response customer nil nil))
+        )))
     ))))
 )
 

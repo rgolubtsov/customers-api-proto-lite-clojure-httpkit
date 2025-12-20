@@ -45,6 +45,8 @@
 (defmacro ERR-REQ-NOT-FOUND-1 [] (str
     "HTTP 404 Not Found: Bad HTTP method used or no such "
     "REST URI path exists. Please check your inputs."))
+(defmacro ERR-REQ-NOT-FOUND-2 []
+    "HTTP 404 Not Found: No such customer exists.")
 
 (defmacro SETTINGS "The filename of the daemon settings
     (in edn (Extensible Data Notation) format)." [] "settings.conf")
@@ -63,6 +65,7 @@
 ; HTTP response status codes.
 (defmacro HTTP-201 [] 201)
 (defmacro HTTP-400 [] 400)
+(defmacro HTTP-404 [] 404)
 
 ; HTTP response-related constants.
 (defmacro CONT-TYPE    [] "content-type"    )
