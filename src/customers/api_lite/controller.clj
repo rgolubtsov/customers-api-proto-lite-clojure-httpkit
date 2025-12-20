@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/controller.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.9
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.0
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -222,15 +222,35 @@
 
     (-method req)
 
-    ; TODO: Retrieve all contacts associated with a given customer
-    ;       from the database.
+    (let [customer-id (-> req :params :customer_id)]
+    (-dbg (str (REST-CUST-ID) (EQUALS) customer-id))
 
-    (-response [
-        {:contact (COLON)}
-        {:contact (SLASH)}
-        {:contact (O-BRACKET)}
-        {:contact (C-BRACKET)}
-    ] nil nil)
+    ; Trying to parse and validate the request path variable.
+    (let [cust-id (try
+        (let [cust-id- (edn/read-string customer-id)]
+        (if-not (number? cust-id-) 0 cust-id-))
+    (catch NumberFormatException e 0))]
+
+    (if (== cust-id 0)
+        (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
+    (do
+        ; Retrieving all contacts associated with a given customer
+        ; from the database.
+        (let [contacts (execute! @cnx [(SQL-GET-ALL-CONTACTS)
+            cust-id ; <== For retrieving phones.
+            cust-id ; <== For retrieving emails.
+        ])]
+
+        (if (== (count contacts) 0)
+            (-response {:error (ERR-REQ-NOT-FOUND-3)} nil (HTTP-404))
+        (do
+            (let [contact0 (nth contacts 0)]
+            (-dbg (str (O-BRACKET) (get contact0 :contact_phones/contact)
+                       (C-BRACKET)))) ; getContact()
+
+            (-response contacts nil nil)
+        )))
+    ))))
 )
 
 (defn list-contacts-by-type

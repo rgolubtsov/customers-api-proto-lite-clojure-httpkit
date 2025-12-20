@@ -53,11 +53,12 @@ $ lein compile :all
 Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
+Compiling customers.api-lite.model
 $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
   DAEMON_NAME="customers-api-lite"; \
-  DMN_VERSION="0.1.9"; \
+  DMN_VERSION="0.2.0"; \
   SIMPLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}.jar"; \
   BUNDLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}-standalone.jar"; \
   rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR} && \
@@ -68,8 +69,9 @@ $ lein uberjar && \
 Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.9.jar
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.1.9-standalone.jar
+Compiling customers.api-lite.model
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.2.0.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.2.0-standalone.jar
 ```
 
 Or **build** the microservice using **GNU Make** (optional, but for convenience &mdash; it covers the same **Leiningen** build workflow under the hood):
@@ -95,14 +97,14 @@ $ lein run; echo $?
 **Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task or GNU Make's `all` target:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.1.9.jar; echo $?
+$ java -jar target/uberjar/customers-api-lite-0.2.0.jar; echo $?
 ...
 ```
 
 To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.1.9.jar > /dev/null 2>&1 &
+$ java -jar target/uberjar/customers-api-lite-0.2.0.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 
@@ -113,7 +115,7 @@ The daemonized microservice then can be stopped gracefully at any time by issuin
 ```
 $ kill -SIGTERM <pid>
 $
-[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.1.9.jar > /dev/null 2>&1
+[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.2.0.jar > /dev/null 2>&1
 ```
 
 ## Consuming
@@ -176,7 +178,18 @@ $ curl -v http://localhost:8765/v1/customers/2
 
 5. **List contacts for a given customer**
 
-**TBD** :cd:
+```
+$ curl -v http://localhost:8765/v1/customers/2/contacts
+...
+> GET /v1/customers/2/contacts HTTP/1.1
+...
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< content-length: 190
+< Server: http-kit
+...
+[{"contact":"+35760X123456"},{"contact":"+35760Y1234578"},{"contact":"+35790Z12345890"},{"contact":"nn@example.org"},{"contact":"nnumbat@example.com"},{"contact":"noble.numbat@example.com"}]
+```
 
 6. **List contacts of a given type for a given customer**
 

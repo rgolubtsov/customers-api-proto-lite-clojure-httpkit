@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/helper.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.1.9
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.0
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -47,6 +47,9 @@
     "REST URI path exists. Please check your inputs."))
 (defmacro ERR-REQ-NOT-FOUND-2 []
     "HTTP 404 Not Found: No such customer exists.")
+(defmacro ERR-REQ-NOT-FOUND-3 [] (str
+    "HTTP 404 Not Found: No contacts belonging to a given customer exist, "
+    "or no such customer exists."))
 
 (defmacro SETTINGS "The filename of the daemon settings
     (in edn (Extensible Data Notation) format)." [] "settings.conf")
