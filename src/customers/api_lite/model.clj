@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/model.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.2.0
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.1
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -53,5 +53,26 @@
     " where"
     "      (cust.id = emails.customer_id) and"
     "      (cust.id =                  ?)"))
+
+; The SQL queries for retrieving all contacts of a given type
+; for a given customer.
+;
+; Used by the `GET /v1/customers/{customer_id}/contacts/{contact_type}`
+; REST endpoint.
+(defmacro SQL-GET-CONTACTS-BY-TYPE [] [(str
+    "select phones.contact" ; as 'Phone(s)'
+    " from"
+    "       contact_phones phones,"
+    "       customers      cust"
+    " where"
+    "      (cust.id = phones.customer_id) and"
+    "      (cust.id =                  ?)") (str
+    "select emails.contact" ; as 'Email(s)'
+    " from"
+    "       contact_emails emails,"
+    "       customers      cust"
+    " where"
+    "      (cust.id = emails.customer_id) and"
+    "      (cust.id =                  ?)")])
 
 ; vim:set nu et ts=4 sw=4:

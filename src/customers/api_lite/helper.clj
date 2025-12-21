@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/helper.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.2.0
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.1
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -18,6 +18,7 @@
 ; Helper constants.
 (defmacro EXIT-FAILURE []   1) ;    Failing exit status.
 (defmacro EXIT-SUCCESS []   0) ; Successful exit status.
+(defmacro SPACE        [] " ")
 (defmacro COLON        [] ":")
 (defmacro SLASH        [] "/")
 (defmacro V-BAR        [] "|")
@@ -64,6 +65,8 @@
 (defmacro REST-CUST-ID   [] "customer_id" )
 (defmacro REST-CONTACTS  [] "contacts"    )
 (defmacro REST-CONT-TYPE [] "contact_type")
+(defmacro PHONE          [] "phone"       )
+(defmacro EMAIL          [] "email"       )
 
 ; HTTP response status codes.
 (defmacro HTTP-201 [] 201)

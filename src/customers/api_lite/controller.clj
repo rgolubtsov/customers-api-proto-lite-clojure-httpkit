@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/controller.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.2.0
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.1
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -271,13 +271,46 @@
 
     (-method req)
 
-    ; TODO: Retrieve all contacts of a given type associated
-    ;       with a given customer from the database.
+    (let [customer-id  (-> req :params :customer_id )]
+    (let [contact-type (-> req :params :contact_type)]
+    (-dbg (str (REST-CUST-ID)   (EQUALS) customer-id (SPACE) (V-BAR) (SPACE)
+               (REST-CONT-TYPE) (EQUALS) contact-type))
 
-    (-response [
-        {:contact (COLON)}
-        {:contact (SLASH)}
-    ] nil nil)
+    ; Trying to parse and validate the request path variable {customer_id}.
+    (let [cust-id (try
+        (let [cust-id- (edn/read-string customer-id)]
+        (if-not (number? cust-id-) 0 cust-id-))
+    (catch NumberFormatException e 0))]
+
+    (if (== cust-id 0)
+        (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
+    (do
+        (let [cont-type (s/lower-case contact-type)]
+        (let [sql-query
+            (if (= cont-type (PHONE)) (nth (SQL-GET-CONTACTS-BY-TYPE) 0)
+            (if (= cont-type (EMAIL)) (nth (SQL-GET-CONTACTS-BY-TYPE) 1)
+                                      (nth (SQL-GET-CONTACTS-BY-TYPE) 1)
+        ))]
+
+        ; Retrieving all contacts of a given type associated
+        ; with a given customer from the database.
+        (let [contacts (execute! @cnx [sql-query cust-id])]
+
+        (if (== (count contacts) 0)
+            (-response {:error (ERR-REQ-NOT-FOUND-3)} nil (HTTP-404))
+        (do
+            (let [contact0 (nth contacts 0)]
+            (let [contact0-type
+                (if (= cont-type (PHONE)) :contact_phones/contact
+                (if (= cont-type (EMAIL)) :contact_emails/contact
+                                          :contact_emails/contact
+            ))]
+            (-dbg (str (O-BRACKET) (get contact0 contact0-type)
+                       (C-BRACKET))))) ; getContact()
+
+            (-response contacts nil nil)
+        )))))
+    )))))
 )
 
 ; -----------------------------------------------------------------------------
