@@ -20,6 +20,7 @@
               ]]
               [next.jdbc         :refer [
                   execute!
+                  execute-one!
               ]]
               [compojure.core    :refer [
                   defroutes
@@ -35,9 +36,8 @@
 (defn -method [req]
 ;   (-dbg (str (O-BRACKET) req (C-BRACKET)))
 
-    (let [method- (:request-method req)]
-    (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
-    (-dbg (str (O-BRACKET) method (C-BRACKET)))))
+    (let [method (s/upper-case (name (:request-method req)))]
+    (-dbg (str (O-BRACKET) method (C-BRACKET))))
 )
 
 ; Helper function. Used to send an HTTP response.
@@ -170,7 +170,7 @@
         req: A hash map representing the incoming HTTP request object.
 
     Returns:
-        A specific HTTP status code with profile details for a given customer
+        HTTP status code `200 OK` with profile details for a given customer
         (in the response body in JSON representation).
         May return client or server error depending on incoming request."
     {:added "0.1.5"} [req]
@@ -190,17 +190,16 @@
         (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
     (do
         ; Retrieving profile details for a given customer from the database.
-        (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) cust-id])]
+        (let [customer (execute-one! @cnx [(SQL-GET-CUSTOMER-BY-ID) cust-id])]
 
-        (if (zero? (count customer-))
+        (if (nil? customer)
             (-response {:error (ERR-REQ-NOT-FOUND-2)} nil (HTTP-404))
         (do
-            (let [customer (nth customer- 0)]
             (-dbg (str (O-BRACKET) (:customers/id   customer) ; getId()
                        (V-BAR)     (:customers/name customer) ; getName()
                        (C-BRACKET)))
 
-            (-response customer nil nil))
+            (-response customer nil nil)
         )))
     ))))
 )
