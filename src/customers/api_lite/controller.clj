@@ -186,13 +186,13 @@
         (if-not (number? cust-id-) 0 cust-id-))
     (catch NumberFormatException e 0))]
 
-    (if (== cust-id 0)
+    (if (zero? cust-id)
         (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
     (do
         ; Retrieving profile details for a given customer from the database.
         (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) cust-id])]
 
-        (if (== (count customer-) 0)
+        (if (zero? (count customer-))
             (-response {:error (ERR-REQ-NOT-FOUND-2)} nil (HTTP-404))
         (do
             (let [customer (nth customer- 0)]
@@ -231,7 +231,7 @@
         (if-not (number? cust-id-) 0 cust-id-))
     (catch NumberFormatException e 0))]
 
-    (if (== cust-id 0)
+    (if (zero? cust-id)
         (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
     (do
         ; Retrieving all contacts associated with a given customer
@@ -241,7 +241,7 @@
             cust-id ; <== For retrieving emails.
         ])]
 
-        (if (== (count contacts) 0)
+        (if (zero? (count contacts))
             (-response {:error (ERR-REQ-NOT-FOUND-3)} nil (HTTP-404))
         (do
             (let [contact0 (nth contacts 0)]
@@ -282,7 +282,7 @@
         (if-not (number? cust-id-) 0 cust-id-))
     (catch NumberFormatException e 0))]
 
-    (if (== cust-id 0)
+    (if (zero? cust-id)
         (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
     (do
         (let [cont-type (s/lower-case contact-type)]
@@ -296,7 +296,7 @@
         ; with a given customer from the database.
         (let [contacts (execute! @cnx [sql-query cust-id])]
 
-        (if (== (count contacts) 0)
+        (if (zero? (count contacts))
             (-response {:error (ERR-REQ-NOT-FOUND-3)} nil (HTTP-404))
         (do
             (let [contact0 (nth contacts 0)]
