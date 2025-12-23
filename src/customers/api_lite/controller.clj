@@ -35,7 +35,7 @@
 (defn -method [req]
 ;   (-dbg (str (O-BRACKET) req (C-BRACKET)))
 
-    (let [method- (get req :request-method)]
+    (let [method- (:request-method req)]
     (let [method  (s/upper-case (s/replace method- (COLON) (str)))]
     (-dbg (str (O-BRACKET) method (C-BRACKET)))))
 )
@@ -154,8 +154,8 @@
     (let [customers (execute! @cnx [(SQL-GET-ALL-CUSTOMERS)])]
 
     (let [customer0 (nth customers 0)]
-    (-dbg (str (O-BRACKET) (get customer0 :customers/id  ) ; getId()
-               (V-BAR)     (get customer0 :customers/name) ; getName()
+    (-dbg (str (O-BRACKET) (:customers/id   customer0) ; getId()
+               (V-BAR)     (:customers/name customer0) ; getName()
                (C-BRACKET))))
 
     (-response customers nil nil))
@@ -196,8 +196,8 @@
             (-response {:error (ERR-REQ-NOT-FOUND-2)} nil (HTTP-404))
         (do
             (let [customer (nth customer- 0)]
-            (-dbg (str (O-BRACKET) (get customer :customers/id  ) ; getId()
-                       (V-BAR)     (get customer :customers/name) ; getName()
+            (-dbg (str (O-BRACKET) (:customers/id   customer) ; getId()
+                       (V-BAR)     (:customers/name customer) ; getName()
                        (C-BRACKET)))
 
             (-response customer nil nil))
@@ -245,7 +245,7 @@
             (-response {:error (ERR-REQ-NOT-FOUND-3)} nil (HTTP-404))
         (do
             (let [contact0 (nth contacts 0)]
-            (-dbg (str (O-BRACKET) (get contact0 :contact_phones/contact)
+            (-dbg (str (O-BRACKET) (:contact_phones/contact contact0)
                        (C-BRACKET)))) ; getContact()
 
             (-response contacts nil nil)
@@ -305,8 +305,8 @@
                 (if (= cont-type (EMAIL)) :contact_emails/contact
                                           :contact_emails/contact
             ))]
-            (-dbg (str (O-BRACKET) (get contact0 contact0-type)
-                       (C-BRACKET))))) ; getContact()
+            (-dbg (str (O-BRACKET) (contact0-type contact0) ; getContact()
+                       (C-BRACKET)))))
 
             (-response contacts nil nil)
         )))))

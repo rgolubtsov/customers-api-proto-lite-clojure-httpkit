@@ -41,13 +41,13 @@
     (let [settings (-get-settings)]
 
     ; Identifying whether debug logging is enabled.
-    (reset! dbg (get settings :logger.debug.enabled))
+    (reset! dbg (:logger.debug.enabled settings))
 
-    (let [daemon-name (get settings :daemon.name)]
+    (let [daemon-name (:daemon.name settings)]
     (-dbg (str (O-BRACKET) daemon-name (C-BRACKET))))
 
     ; Getting the SQLite database JDBC URL.
-    (let [datasource-url (get settings :sqlite.datasource.url)]
+    (let [datasource-url (:sqlite.datasource.url settings)]
 
     ; Connecting to the database.
     (reset! cnx (db/get-connection (db/get-datasource datasource-url)))
