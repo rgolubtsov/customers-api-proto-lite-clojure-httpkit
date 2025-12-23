@@ -136,7 +136,7 @@ No. | Endpoint name                                      | Request method and RE
 * The `{customer_contact}` placeholder is a string &mdash; it denotes a newly created customer contact (phone or email).
 * The `{contact_type}` placeholder is a string and can take one of two possible values, case-insensitive: `phone` or `email`.
 
-The following command-line snippets display the exact usage for these endpoints (the **cURL** utility is used as an example to access them):
+The following command-line snippets display the exact usage for these endpoints (the **cURL** utility is used as an example to access them)^:
 
 1. **Create customer**
 
@@ -193,7 +193,35 @@ $ curl -v http://localhost:8765/v1/customers/2/contacts
 
 6. **List contacts of a given type for a given customer**
 
-**TBD** :cd:
+```
+$ curl -v http://localhost:8765/v1/customers/2/contacts/phone
+...
+> GET /v1/customers/2/contacts/phone HTTP/1.1
+...
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< content-length: 88
+< Server: http-kit
+...
+[{"contact":"+35760X123456"},{"contact":"+35760Y1234578"},{"contact":"+35790Z12345890"}]
+```
+
+Or list **email** contacts:
+
+```
+$ curl -v http://localhost:8765/v1/customers/2/contacts/email
+...
+> GET /v1/customers/2/contacts/email HTTP/1.1
+...
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< content-length: 103
+< Server: http-kit
+...
+[{"contact":"noble.numbat@example.com"},{"contact":"nnumbat@example.com"},{"contact":"nn@example.org"}]
+```
+
+> ^ The given names in customer accounts and in email contacts (in samples above) are for demonstrational purposes only. They have nothing common WRT any actual, ever really encountered names elsewhere.
 
 ### Logging
 
@@ -201,15 +229,24 @@ The microservice has the ability to log messages to a logfile and to the Unix sy
 
 ```
 $ tail -f log/customers-api-lite.log
-[2025-12-17][02:10:20] [DEBUG] [Customers API Lite]
-[2025-12-17][02:10:20] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@4e61a863]
-[2025-12-17][02:10:20] [INFO ] Server started on port 8765
-[2025-12-17][02:10:30] [DEBUG] [GET]
-[2025-12-17][02:10:30] [DEBUG] [1|Jammy Jellyfish]
-[2025-12-17][02:10:40] [DEBUG] [GET]
-[2025-12-17][02:10:40] [DEBUG] customer_id=2
-[2025-12-17][02:10:40] [DEBUG] [2|Noble Numbat]
-[2025-12-17][02:10:50] [INFO ] Server stopped
+[2025-12-23][04:30:10] [DEBUG] [Customers API Lite]
+[2025-12-23][04:30:10] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@5a78b52b]
+[2025-12-23][04:30:10] [INFO ] Server started on port 8765
+[2025-12-23][04:30:20] [DEBUG] [GET]
+[2025-12-23][04:30:20] [DEBUG] [1|Jammy Jellyfish]
+[2025-12-23][04:30:30] [DEBUG] [GET]
+[2025-12-23][04:30:30] [DEBUG] customer_id=2
+[2025-12-23][04:30:30] [DEBUG] [2|Noble Numbat]
+[2025-12-23][04:30:40] [DEBUG] [GET]
+[2025-12-23][04:30:40] [DEBUG] customer_id=2
+[2025-12-23][04:30:40] [DEBUG] [+35760X123456]
+[2025-12-23][04:30:45] [DEBUG] [GET]
+[2025-12-23][04:30:45] [DEBUG] customer_id=2 | contact_type=phone
+[2025-12-23][04:30:45] [DEBUG] [+35760X123456]
+[2025-12-23][04:30:50] [DEBUG] [GET]
+[2025-12-23][04:30:50] [DEBUG] customer_id=2 | contact_type=email
+[2025-12-23][04:30:50] [DEBUG] [noble.numbat@example.com]
+[2025-12-23][04:30:55] [INFO ] Server stopped
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -217,15 +254,24 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Dec 17 02:10:20 <hostname> java[<pid>]: [Customers API Lite]
-Dec 17 02:10:20 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@4e61a863]
-Dec 17 02:10:20 <hostname> java[<pid>]: Server started on port 8765
-Dec 17 02:10:30 <hostname> java[<pid>]: [GET]
-Dec 17 02:10:30 <hostname> java[<pid>]: [1|Jammy Jellyfish]
-Dec 17 02:10:40 <hostname> java[<pid>]: [GET]
-Dec 17 02:10:40 <hostname> java[<pid>]: customer_id=2
-Dec 17 02:10:40 <hostname> java[<pid>]: [2|Noble Numbat]
-Dec 17 02:10:50 <hostname> java[<pid>]: Server stopped
+Dec 23 04:30:10 <hostname> java[<pid>]: [Customers API Lite]
+Dec 23 04:30:10 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@5a78b52b]
+Dec 23 04:30:10 <hostname> java[<pid>]: Server started on port 8765
+Dec 23 04:30:20 <hostname> java[<pid>]: [GET]
+Dec 23 04:30:20 <hostname> java[<pid>]: [1|Jammy Jellyfish]
+Dec 23 04:30:30 <hostname> java[<pid>]: [GET]
+Dec 23 04:30:30 <hostname> java[<pid>]: customer_id=2
+Dec 23 04:30:30 <hostname> java[<pid>]: [2|Noble Numbat]
+Dec 23 04:30:40 <hostname> java[<pid>]: [GET]
+Dec 23 04:30:40 <hostname> java[<pid>]: customer_id=2
+Dec 23 04:30:40 <hostname> java[<pid>]: [+35760X123456]
+Dec 23 04:30:45 <hostname> java[<pid>]: [GET]
+Dec 23 04:30:45 <hostname> java[<pid>]: customer_id=2 | contact_type=phone
+Dec 23 04:30:45 <hostname> java[<pid>]: [+35760X123456]
+Dec 23 04:30:50 <hostname> java[<pid>]: [GET]
+Dec 23 04:30:50 <hostname> java[<pid>]: customer_id=2 | contact_type=email
+Dec 23 04:30:50 <hostname> java[<pid>]: [noble.numbat@example.com]
+Dec 23 04:30:55 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:
