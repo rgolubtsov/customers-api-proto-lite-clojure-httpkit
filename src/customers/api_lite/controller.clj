@@ -20,6 +20,7 @@
               ]]
               [next.jdbc         :refer [
                   execute!
+                  execute-one!
               ]]
               [compojure.core    :refer [
                   defroutes
@@ -190,17 +191,16 @@
         (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
     (do
         ; Retrieving profile details for a given customer from the database.
-        (let [customer- (execute! @cnx [(SQL-GET-CUSTOMER-BY-ID) cust-id])]
+        (let [customer (execute-one! @cnx [(SQL-GET-CUSTOMER-BY-ID) cust-id])]
 
-        (if (zero? (count customer-))
+        (if (nil? customer)
             (-response {:error (ERR-REQ-NOT-FOUND-2)} nil (HTTP-404))
         (do
-            (let [customer (nth customer- 0)]
             (-dbg (str (O-BRACKET) (:customers/id   customer) ; getId()
                        (V-BAR)     (:customers/name customer) ; getName()
                        (C-BRACKET)))
 
-            (-response customer nil nil))
+            (-response customer nil nil)
         )))
     ))))
 )
