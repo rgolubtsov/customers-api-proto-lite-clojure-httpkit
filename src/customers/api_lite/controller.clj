@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/controller.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.2.1
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.2
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
