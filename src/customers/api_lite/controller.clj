@@ -17,6 +17,7 @@
               [clojure.edn       :as edn]
               [clojure.data.json :refer [
                   write-str
+                  read-str
               ]]
               [next.jdbc         :refer [
                   execute!
@@ -83,13 +84,22 @@
 
     (-method req)
 
-    ; TODO: Create a new customer (put customer data to the database).
+    (let [payload (:body req)]
 
-    (-response (str) {
-        (HDR-LOCATION) (str (SLASH) (REST-VERSION)
-                            (SLASH) (REST-PREFIX)
-                            (SLASH) (EQUALS))
-    } (HTTP-201))
+    (if (nil? payload)
+        (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
+    (do
+        (let [payload- (read-str (slurp payload) :key-fn keyword)]
+        (-dbg (str (O-BRACKET) payload- (C-BRACKET)))
+
+        ; TODO: Create a new customer (put customer data to the database).
+
+        (-response payload- {
+            (HDR-LOCATION) (str (SLASH) (REST-VERSION)
+                                (SLASH) (REST-PREFIX)
+                                (SLASH) (EQUALS))
+        } (HTTP-201)))
+    )))
 )
 
 (defn add-contact
