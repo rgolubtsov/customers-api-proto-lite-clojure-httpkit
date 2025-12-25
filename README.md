@@ -140,7 +140,24 @@ The following command-line snippets display the exact usage for these endpoints 
 
 1. **Create customer**
 
-**TBD** :cd:
+```
+$ curl -vXPUT http://localhost:8765/v1/customers \
+       -H 'content-type: application/json' \
+       -d '{"name":"Jamison Palmer"}'
+...
+> PUT /v1/customers HTTP/1.1
+...
+> content-type: application/json
+> Content-Length: 25
+...
+< HTTP/1.1 201 Created
+< Content-Type: application/json
+< Location: /v1/customers/3
+< content-length: 32
+< Server: http-kit
+...
+{"id":3,"name":"Jamison Palmer"}
+```
 
 2. **Create contact**
 
@@ -155,10 +172,10 @@ $ curl -v http://localhost:8765/v1/customers
 ...
 < HTTP/1.1 200 OK
 < Content-Type: application/json
-< content-length: 66
+< content-length: 99
 < Server: http-kit
 ...
-[{"id":1,"name":"Jammy Jellyfish"},{"id":2,"name":"Noble Numbat"}]
+[{"id":1,"name":"Jammy Jellyfish"},{"id":2,"name":"Noble Numbat"},{"id":3,"name":"Jamison Palmer"}]
 ```
 
 4. **Retrieve customer**
