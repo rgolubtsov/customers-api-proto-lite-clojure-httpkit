@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/model.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.2.2
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.3
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -11,6 +11,12 @@
 ;
 
 (ns customers.api-lite.model "The model namespace of the daemon.")
+
+; The SQL query for creating a new customer
+; (putting customer data to the database).
+;
+; Used by the `PUT /v1/customers` REST endpoint.
+(defmacro SQL-PUT-CUSTOMER [] "insert into customers (name) values (?)")
 
 ; The SQL query for retrieving all customer profiles.
 ;
@@ -74,5 +80,9 @@
     " where"
     "      (cust.id = emails.customer_id) and"
     "      (cust.id =                  ?)")])
+
+; The terminating part of an SQL query,
+; used to retrieve the last record created.
+(defmacro SQL-DESC-LIMIT-1 [] " desc limit 1")
 
 ; vim:set nu et ts=4 sw=4:

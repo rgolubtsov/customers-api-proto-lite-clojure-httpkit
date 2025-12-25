@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/controller.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.2.2
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.3
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -17,6 +17,7 @@
               [clojure.edn       :as edn]
               [clojure.data.json :refer [
                   write-str
+                  read-str
               ]]
               [next.jdbc         :refer [
                   execute!
@@ -83,13 +84,33 @@
 
     (-method req)
 
-    ; TODO: Create a new customer (put customer data to the database).
+    (let [payload (:body req)]
 
-    (-response (str) {
-        (HDR-LOCATION) (str (SLASH) (REST-VERSION)
-                            (SLASH) (REST-PREFIX)
-                            (SLASH) (EQUALS))
-    } (HTTP-201))
+    (if (nil? payload)
+        (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
+    (do
+        (let [customer (read-str (slurp payload) :key-fn keyword)]
+
+        (let [customer-name (:name customer)]
+        (-dbg (str (O-BRACKET) customer-name (C-BRACKET)))
+
+        ; Creating a new customer (putting customer data to the database).
+        (execute-one! @cnx [(SQL-PUT-CUSTOMER) customer-name])))
+
+        (let [customer0 (execute-one! @cnx [(str
+            (SQL-GET-ALL-CUSTOMERS)
+            (SQL-DESC-LIMIT-1)
+        )])]
+        (-dbg (str (O-BRACKET) (:customers/id   customer0) ; getId()
+                   (V-BAR)     (:customers/name customer0) ; getName()
+                   (C-BRACKET)))
+
+        (-response customer0 {
+            (HDR-LOCATION) (str (SLASH) (REST-VERSION)
+                                (SLASH) (REST-PREFIX)
+                                (SLASH) (:customers/id customer0)) ; getId()
+        } (HTTP-201)))
+    )))
 )
 
 (defn add-contact
