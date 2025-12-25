@@ -89,15 +89,26 @@
     (if (nil? payload)
         (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
     (do
-        (let [payload- (read-str (slurp payload) :key-fn keyword)]
-        (-dbg (str (O-BRACKET) payload- (C-BRACKET)))
+        (let [customer (read-str (slurp payload) :key-fn keyword)]
 
-        ; TODO: Create a new customer (put customer data to the database).
+        (let [customer-name (:name customer)]
+        (-dbg (str (O-BRACKET) customer-name (C-BRACKET)))
 
-        (-response payload- {
+        ; Creating a new customer (putting customer data to the database).
+        (execute-one! @cnx [(SQL-PUT-CUSTOMER) customer-name])))
+
+        (let [customer0 (execute-one! @cnx [(str
+            (SQL-GET-ALL-CUSTOMERS)
+            (SQL-DESC-LIMIT-1)
+        )])]
+        (-dbg (str (O-BRACKET) (:customers/id   customer0) ; getId()
+                   (V-BAR)     (:customers/name customer0) ; getName()
+                   (C-BRACKET)))
+
+        (-response customer0 {
             (HDR-LOCATION) (str (SLASH) (REST-VERSION)
                                 (SLASH) (REST-PREFIX)
-                                (SLASH) (EQUALS))
+                                (SLASH) (:customers/id customer0)) ; getId()
         } (HTTP-201)))
     )))
 )
