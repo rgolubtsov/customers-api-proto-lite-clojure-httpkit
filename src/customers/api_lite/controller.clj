@@ -55,6 +55,12 @@
     resp--)))
 )
 
+; Helper function. Used to parse and validate a customer contact.
+;                  Returns the type of contact: phone or email.
+(defn -parse-contact [contact]
+    (str)
+)
+
 ; REST API endpoints ----------------------------------------------------------
 
 (defn add-customer
@@ -143,16 +149,45 @@
 
     (-method req)
 
-    ; TODO: Create a new contact (put a contact regarding a given customer
-    ;       to the database).
+    (let [payload (:body req)]
 
-    (-response (str) {
-        (HDR-LOCATION) (str (SLASH) (REST-VERSION)
-                            (SLASH) (REST-PREFIX)
-                            (SLASH) (EQUALS)
-                            (SLASH) (REST-CONTACTS)
-                            (SLASH) (EQUALS))
-    } (HTTP-201))
+    (if (nil? payload)
+        (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
+    (do
+        (let [contact (read-str (slurp payload) :key-fn keyword)]
+        (-dbg (str (O-BRACKET) contact (C-BRACKET)))
+
+        (let [contact-cust-id (:customer_id contact)]
+        (let [contact-contact (:contact     contact)]
+        (-dbg (str (REST-CUST-ID) (EQUALS) contact-cust-id))
+        (-dbg (str (O-BRACKET) contact-contact (C-BRACKET)))
+
+        ; Trying to parse and validate the request payload {customer_id}.
+        (let [cust-id (try
+            (let [cust-id- (edn/read-string contact-cust-id)]
+            (if-not (number? cust-id-) 0 cust-id-))
+        (catch NumberFormatException e 0))]
+
+        (if (zero? cust-id)
+            (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
+        (do
+            ; Parsing and validating a customer contact: phone or email.
+            (let [contact-type (-parse-contact contact-contact)]
+            (-dbg (str (O-BRACKET) contact-type (C-BRACKET)))
+
+            (if (empty? contact-type)
+                (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
+            (do
+                (-response (str) {
+                    (HDR-LOCATION) (str (SLASH) (REST-VERSION)
+                                        (SLASH) (REST-PREFIX)
+                                        (SLASH) contact-cust-id
+                                        (SLASH) (REST-CONTACTS)
+                                        (SLASH) contact-type)
+                } (HTTP-201))
+            )))
+        ))))))
+    )))
 )
 
 (defn list-customers
