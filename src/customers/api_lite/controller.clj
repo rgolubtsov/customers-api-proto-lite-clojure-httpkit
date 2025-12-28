@@ -162,7 +162,6 @@
         (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
     (do
         (let [contact (read-str (slurp payload) :key-fn keyword)]
-        (-dbg (str (O-BRACKET) contact (C-BRACKET)))
 
         (let [contact-cust-id (:customer_id contact)]
         (let [contact-contact (:contact     contact)]
@@ -180,18 +179,48 @@
         (do
             ; Parsing and validating a customer contact: phone or email.
             (let [contact-type (-parse-contact contact-contact)]
-            (-dbg (str (O-BRACKET) contact-type (C-BRACKET)))
 
             (if (empty? contact-type)
                 (-response {:error (ERR-REQ-MALFORMED)} nil (HTTP-400))
             (do
-                (-response (str) {
+                (let [sql-query
+                    (if (= contact-type (PHONE)) (nth (SQL-PUT-CONTACT) 0)
+                    (if (= contact-type (EMAIL)) (nth (SQL-PUT-CONTACT) 1)
+                                                 (nth (SQL-PUT-CONTACT) 1)
+                ))]
+
+                ; Creating a new contact (putting a contact regarding a given
+                ; customer to the database).
+                (execute-one!@cnx [sql-query contact-contact contact-cust-id]))
+
+                (let [sql-query-
+                    (if (= contact-type (PHONE)) (str
+                        (nth (SQL-GET-CONTACTS-BY-TYPE) 0)
+                        (nth (SQL-ORDER-CONTACTS-BY-ID) 0))
+                    (if (= contact-type (EMAIL)) (str
+                        (nth (SQL-GET-CONTACTS-BY-TYPE) 1)
+                        (nth (SQL-ORDER-CONTACTS-BY-ID) 1))
+                        (nth (SQL-GET-CONTACTS-BY-TYPE) 1)
+                ))]
+
+                (let [contact0 (execute-one! @cnx [
+                    (str sql-query- (SQL-DESC-LIMIT-1)) cust-id])]
+                (let [contact0-type
+                    (if (= contact-type (PHONE)) :contact_phones/contact
+                    (if (= contact-type (EMAIL)) :contact_emails/contact
+                                                 :contact_emails/contact
+                ))]
+                (-dbg (str (O-BRACKET) contact-type
+                           (V-BAR)   (contact0-type contact0) ; getContact()
+                           (C-BRACKET))))
+
+                (-response contact0 {
                     (HDR-LOCATION) (str (SLASH) (REST-VERSION)
                                         (SLASH) (REST-PREFIX)
                                         (SLASH) contact-cust-id
                                         (SLASH) (REST-CONTACTS)
                                         (SLASH) contact-type)
-                } (HTTP-201))
+                } (HTTP-201))))
             )))
         ))))))
     )))
