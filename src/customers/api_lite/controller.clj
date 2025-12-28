@@ -58,7 +58,14 @@
 ; Helper function. Used to parse and validate a customer contact.
 ;                  Returns the type of contact: phone or email.
 (defn -parse-contact [contact]
-    (str)
+    (let [phone? (re-find (PHONE-REGEX) contact)]
+    (if (nil? phone?) (do
+    (let [email? (re-find (EMAIL-REGEX) contact)]
+    (if (nil? email?) (str)
+        (if (= email? contact) (EMAIL) (str))
+    )))
+        (if (= phone? contact) (PHONE) (str))
+    ))
 )
 
 ; REST API endpoints ----------------------------------------------------------

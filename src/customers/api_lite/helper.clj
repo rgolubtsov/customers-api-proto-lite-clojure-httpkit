@@ -78,6 +78,10 @@
 (defmacro MIME-TYPE    [] "application/json")
 (defmacro HDR-LOCATION [] "Location"        )
 
+; Regex patterns for contact phones and emails.
+(defmacro PHONE-REGEX [] #"^\+\d{9,14}"     )
+(defmacro EMAIL-REGEX [] #".{1,63}@.{3,190}")
+
 ; Globals.
 (def s   "The Unix system logger."    (atom {}))
 (def dbg "The debug logging enabler." (atom {}))
