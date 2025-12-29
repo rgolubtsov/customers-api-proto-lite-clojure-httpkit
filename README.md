@@ -284,24 +284,54 @@ The microservice has the ability to log messages to a logfile and to the Unix sy
 
 ```
 $ tail -f log/customers-api-lite.log
-[2025-12-23][04:30:10] [DEBUG] [Customers API Lite]
-[2025-12-23][04:30:10] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@5a78b52b]
-[2025-12-23][04:30:10] [INFO ] Server started on port 8765
-[2025-12-23][04:30:20] [DEBUG] [GET]
-[2025-12-23][04:30:20] [DEBUG] [1|Jammy Jellyfish]
-[2025-12-23][04:30:30] [DEBUG] [GET]
-[2025-12-23][04:30:30] [DEBUG] customer_id=2
-[2025-12-23][04:30:30] [DEBUG] [2|Noble Numbat]
-[2025-12-23][04:30:40] [DEBUG] [GET]
-[2025-12-23][04:30:40] [DEBUG] customer_id=2
-[2025-12-23][04:30:40] [DEBUG] [+35760X123456]
-[2025-12-23][04:30:45] [DEBUG] [GET]
-[2025-12-23][04:30:45] [DEBUG] customer_id=2 | contact_type=phone
-[2025-12-23][04:30:45] [DEBUG] [+35760X123456]
-[2025-12-23][04:30:50] [DEBUG] [GET]
-[2025-12-23][04:30:50] [DEBUG] customer_id=2 | contact_type=email
-[2025-12-23][04:30:50] [DEBUG] [noble.numbat@example.com]
-[2025-12-23][04:30:55] [INFO ] Server stopped
+[2025-12-29][15:10:00] [DEBUG] [Customers API Lite]
+[2025-12-29][15:10:00] [DEBUG] [org.sqlite.jdbc4.JDBC4Connection@398694a6]
+[2025-12-29][15:10:00] [INFO ] Server started on port 8765
+[2025-12-29][15:10:30] [DEBUG] [PUT]
+[2025-12-29][15:10:30] [DEBUG] [Jamison Palmer]
+[2025-12-29][15:10:30] [DEBUG] [3|Jamison Palmer]
+[2025-12-29][15:10:50] [DEBUG] [PUT]
+[2025-12-29][15:10:50] [DEBUG] [Sarah Kitteringham]
+[2025-12-29][15:10:50] [DEBUG] [4|Sarah Kitteringham]
+[2025-12-29][15:11:10] [DEBUG] [PUT]
+[2025-12-29][15:11:10] [DEBUG] customer_id=3
+[2025-12-29][15:11:10] [DEBUG] [+12197654320]
+[2025-12-29][15:11:10] [DEBUG] [phone|+12197654320]
+[2025-12-29][15:11:40] [DEBUG] [PUT]
+[2025-12-29][15:11:40] [DEBUG] customer_id=3
+[2025-12-29][15:11:40] [DEBUG] [+12197654321]
+[2025-12-29][15:11:40] [DEBUG] [phone|+12197654321]
+[2025-12-29][15:12:00] [DEBUG] [PUT]
+[2025-12-29][15:12:00] [DEBUG] customer_id=3
+[2025-12-29][15:12:00] [DEBUG] [+12197654322]
+[2025-12-29][15:12:00] [DEBUG] [phone|+12197654322]
+[2025-12-29][15:12:20] [DEBUG] [PUT]
+[2025-12-29][15:12:20] [DEBUG] customer_id=3
+[2025-12-29][15:12:20] [DEBUG] [jamison.palmer@example.com]
+[2025-12-29][15:12:20] [DEBUG] [email|jamison.palmer@example.com]
+[2025-12-29][15:12:40] [DEBUG] [PUT]
+[2025-12-29][15:12:40] [DEBUG] customer_id=3
+[2025-12-29][15:12:40] [DEBUG] [jpalmer@example.com]
+[2025-12-29][15:12:40] [DEBUG] [email|jpalmer@example.com]
+[2025-12-29][15:12:50] [DEBUG] [PUT]
+[2025-12-29][15:12:50] [DEBUG] customer_id=3
+[2025-12-29][15:12:50] [DEBUG] [jp@example.com]
+[2025-12-29][15:12:50] [DEBUG] [email|jp@example.com]
+[2025-12-29][15:13:10] [DEBUG] [GET]
+[2025-12-29][15:13:10] [DEBUG] [1|Jammy Jellyfish]
+[2025-12-29][15:13:20] [DEBUG] [GET]
+[2025-12-29][15:13:20] [DEBUG] customer_id=3
+[2025-12-29][15:13:20] [DEBUG] [3|Jamison Palmer]
+[2025-12-29][15:13:30] [DEBUG] [GET]
+[2025-12-29][15:13:30] [DEBUG] customer_id=3
+[2025-12-29][15:13:30] [DEBUG] [+12197654320]
+[2025-12-29][15:13:40] [DEBUG] [GET]
+[2025-12-29][15:13:40] [DEBUG] customer_id=3 | contact_type=phone
+[2025-12-29][15:13:40] [DEBUG] [+12197654320]
+[2025-12-29][15:13:50] [DEBUG] [GET]
+[2025-12-29][15:13:50] [DEBUG] customer_id=3 | contact_type=email
+[2025-12-29][15:13:50] [DEBUG] [jamison.palmer@example.com]
+[2025-12-29][15:14:00] [INFO ] Server stopped
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -309,24 +339,54 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Dec 23 04:30:10 <hostname> java[<pid>]: [Customers API Lite]
-Dec 23 04:30:10 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@5a78b52b]
-Dec 23 04:30:10 <hostname> java[<pid>]: Server started on port 8765
-Dec 23 04:30:20 <hostname> java[<pid>]: [GET]
-Dec 23 04:30:20 <hostname> java[<pid>]: [1|Jammy Jellyfish]
-Dec 23 04:30:30 <hostname> java[<pid>]: [GET]
-Dec 23 04:30:30 <hostname> java[<pid>]: customer_id=2
-Dec 23 04:30:30 <hostname> java[<pid>]: [2|Noble Numbat]
-Dec 23 04:30:40 <hostname> java[<pid>]: [GET]
-Dec 23 04:30:40 <hostname> java[<pid>]: customer_id=2
-Dec 23 04:30:40 <hostname> java[<pid>]: [+35760X123456]
-Dec 23 04:30:45 <hostname> java[<pid>]: [GET]
-Dec 23 04:30:45 <hostname> java[<pid>]: customer_id=2 | contact_type=phone
-Dec 23 04:30:45 <hostname> java[<pid>]: [+35760X123456]
-Dec 23 04:30:50 <hostname> java[<pid>]: [GET]
-Dec 23 04:30:50 <hostname> java[<pid>]: customer_id=2 | contact_type=email
-Dec 23 04:30:50 <hostname> java[<pid>]: [noble.numbat@example.com]
-Dec 23 04:30:55 <hostname> java[<pid>]: Server stopped
+Dec 29 15:10:00 <hostname> java[<pid>]: [Customers API Lite]
+Dec 29 15:10:00 <hostname> java[<pid>]: [org.sqlite.jdbc4.JDBC4Connection@398694a6]
+Dec 29 15:10:00 <hostname> java[<pid>]: Server started on port 8765
+Dec 29 15:10:30 <hostname> java[<pid>]: [PUT]
+Dec 29 15:10:30 <hostname> java[<pid>]: [Jamison Palmer]
+Dec 29 15:10:30 <hostname> java[<pid>]: [3|Jamison Palmer]
+Dec 29 15:10:50 <hostname> java[<pid>]: [PUT]
+Dec 29 15:10:50 <hostname> java[<pid>]: [Sarah Kitteringham]
+Dec 29 15:10:50 <hostname> java[<pid>]: [4|Sarah Kitteringham]
+Dec 29 15:11:10 <hostname> java[<pid>]: [PUT]
+Dec 29 15:11:10 <hostname> java[<pid>]: customer_id=3
+Dec 29 15:11:10 <hostname> java[<pid>]: [+12197654320]
+Dec 29 15:11:10 <hostname> java[<pid>]: [phone|+12197654320]
+Dec 29 15:11:40 <hostname> java[<pid>]: [PUT]
+Dec 29 15:11:40 <hostname> java[<pid>]: customer_id=3
+Dec 29 15:11:40 <hostname> java[<pid>]: [+12197654321]
+Dec 29 15:11:40 <hostname> java[<pid>]: [phone|+12197654321]
+Dec 29 15:12:00 <hostname> java[<pid>]: [PUT]
+Dec 29 15:12:00 <hostname> java[<pid>]: customer_id=3
+Dec 29 15:12:00 <hostname> java[<pid>]: [+12197654322]
+Dec 29 15:12:00 <hostname> java[<pid>]: [phone|+12197654322]
+Dec 29 15:12:20 <hostname> java[<pid>]: [PUT]
+Dec 29 15:12:20 <hostname> java[<pid>]: customer_id=3
+Dec 29 15:12:20 <hostname> java[<pid>]: [jamison.palmer@example.com]
+Dec 29 15:12:20 <hostname> java[<pid>]: [email|jamison.palmer@example.com]
+Dec 29 15:12:40 <hostname> java[<pid>]: [PUT]
+Dec 29 15:12:40 <hostname> java[<pid>]: customer_id=3
+Dec 29 15:12:40 <hostname> java[<pid>]: [jpalmer@example.com]
+Dec 29 15:12:40 <hostname> java[<pid>]: [email|jpalmer@example.com]
+Dec 29 15:12:50 <hostname> java[<pid>]: [PUT]
+Dec 29 15:12:50 <hostname> java[<pid>]: customer_id=3
+Dec 29 15:12:50 <hostname> java[<pid>]: [jp@example.com]
+Dec 29 15:12:50 <hostname> java[<pid>]: [email|jp@example.com]
+Dec 29 15:13:10 <hostname> java[<pid>]: [GET]
+Dec 29 15:13:10 <hostname> java[<pid>]: [1|Jammy Jellyfish]
+Dec 29 15:13:20 <hostname> java[<pid>]: [GET]
+Dec 29 15:13:20 <hostname> java[<pid>]: customer_id=3
+Dec 29 15:13:20 <hostname> java[<pid>]: [3|Jamison Palmer]
+Dec 29 15:13:30 <hostname> java[<pid>]: [GET]
+Dec 29 15:13:30 <hostname> java[<pid>]: customer_id=3
+Dec 29 15:13:30 <hostname> java[<pid>]: [+12197654320]
+Dec 29 15:13:40 <hostname> java[<pid>]: [GET]
+Dec 29 15:13:40 <hostname> java[<pid>]: customer_id=3 | contact_type=phone
+Dec 29 15:13:40 <hostname> java[<pid>]: [+12197654320]
+Dec 29 15:13:50 <hostname> java[<pid>]: [GET]
+Dec 29 15:13:50 <hostname> java[<pid>]: customer_id=3 | contact_type=email
+Dec 29 15:13:50 <hostname> java[<pid>]: [jamison.palmer@example.com]
+Dec 29 15:14:00 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:
