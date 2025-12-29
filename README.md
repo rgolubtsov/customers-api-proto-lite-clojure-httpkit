@@ -161,7 +161,45 @@ $ curl -vXPUT http://localhost:8765/v1/customers \
 
 2. **Create contact**
 
-**TBD** :cd:
+```
+$ curl -vXPUT http://localhost:8765/v1/customers/contacts \
+       -H 'content-type: application/json' \
+       -d '{"customer_id":"3","contact":"+12197654320"}'
+...
+> PUT /v1/customers/contacts HTTP/1.1
+...
+> content-type: application/json
+> Content-Length: 44
+...
+< HTTP/1.1 201 Created
+< Content-Type: application/json
+< Location: /v1/customers/3/contacts/phone
+< content-length: 26
+< Server: http-kit
+...
+{"contact":"+12197654320"}
+```
+
+Or create **email** contact:
+
+```
+$ curl -vXPUT http://localhost:8765/v1/customers/contacts \
+       -H 'content-type: application/json' \
+       -d '{"customer_id":"3","contact":"jamison.palmer@example.com"}'
+...
+> PUT /v1/customers/contacts HTTP/1.1
+...
+> content-type: application/json
+> Content-Length: 58
+...
+< HTTP/1.1 201 Created
+< Content-Type: application/json
+< Location: /v1/customers/3/contacts/email
+< content-length: 40
+< Server: http-kit
+...
+{"contact":"jamison.palmer@example.com"}
+```
 
 3. **List customers**
 
@@ -172,70 +210,70 @@ $ curl -v http://localhost:8765/v1/customers
 ...
 < HTTP/1.1 200 OK
 < Content-Type: application/json
-< content-length: 99
+< content-length: 136
 < Server: http-kit
 ...
-[{"id":1,"name":"Jammy Jellyfish"},{"id":2,"name":"Noble Numbat"},{"id":3,"name":"Jamison Palmer"}]
+[{"id":1,"name":"Jammy Jellyfish"},{"id":2,"name":"Noble Numbat"},{"id":3,"name":"Jamison Palmer"},{"id":4,"name":"Sarah Kitteringham"}]
 ```
 
 4. **Retrieve customer**
 
 ```
-$ curl -v http://localhost:8765/v1/customers/2
+$ curl -v http://localhost:8765/v1/customers/3
 ...
-> GET /v1/customers/2 HTTP/1.1
+> GET /v1/customers/3 HTTP/1.1
 ...
 < HTTP/1.1 200 OK
 < Content-Type: application/json
-< content-length: 30
+< content-length: 32
 < Server: http-kit
 ...
-{"id":2,"name":"Noble Numbat"}
+{"id":3,"name":"Jamison Palmer"}
 ```
 
 5. **List contacts for a given customer**
 
 ```
-$ curl -v http://localhost:8765/v1/customers/2/contacts
+$ curl -v http://localhost:8765/v1/customers/3/contacts
 ...
-> GET /v1/customers/2/contacts HTTP/1.1
+> GET /v1/customers/3/contacts HTTP/1.1
 ...
 < HTTP/1.1 200 OK
 < Content-Type: application/json
-< content-length: 190
+< content-length: 186
 < Server: http-kit
 ...
-[{"contact":"+35760X123456"},{"contact":"+35760Y1234578"},{"contact":"+35790Z12345890"},{"contact":"nn@example.org"},{"contact":"nnumbat@example.com"},{"contact":"noble.numbat@example.com"}]
+[{"contact":"+12197654320"},{"contact":"+12197654321"},{"contact":"+12197654322"},{"contact":"jamison.palmer@example.com"},{"contact":"jp@example.com"},{"contact":"jpalmer@example.com"}]
 ```
 
 6. **List contacts of a given type for a given customer**
 
 ```
-$ curl -v http://localhost:8765/v1/customers/2/contacts/phone
+$ curl -v http://localhost:8765/v1/customers/3/contacts/phone
 ...
-> GET /v1/customers/2/contacts/phone HTTP/1.1
+> GET /v1/customers/3/contacts/phone HTTP/1.1
 ...
 < HTTP/1.1 200 OK
 < Content-Type: application/json
-< content-length: 88
+< content-length: 82
 < Server: http-kit
 ...
-[{"contact":"+35760X123456"},{"contact":"+35760Y1234578"},{"contact":"+35790Z12345890"}]
+[{"contact":"+12197654320"},{"contact":"+12197654321"},{"contact":"+12197654322"}]
 ```
 
 Or list **email** contacts:
 
 ```
-$ curl -v http://localhost:8765/v1/customers/2/contacts/email
+$ curl -v http://localhost:8765/v1/customers/3/contacts/email
 ...
-> GET /v1/customers/2/contacts/email HTTP/1.1
+> GET /v1/customers/3/contacts/email HTTP/1.1
 ...
 < HTTP/1.1 200 OK
 < Content-Type: application/json
-< content-length: 103
+< content-length: 105
 < Server: http-kit
 ...
-[{"contact":"noble.numbat@example.com"},{"contact":"nnumbat@example.com"},{"contact":"nn@example.org"}]
+[{"contact":"jamison.palmer@example.com"},{"contact":"jpalmer@example.com"},{"contact":"jp@example.com"}]
 ```
 
 > ^ The given names in customer accounts and in email contacts (in samples above) are for demonstrational purposes only. They have nothing common WRT any actual, ever really encountered names elsewhere.
