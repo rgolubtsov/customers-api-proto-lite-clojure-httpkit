@@ -17,6 +17,7 @@
     (:use     [customers.api-lite.helper    ]
               [customers.api-lite.controller])
     (:require [clojure.tools.logging :as l  ]
+              [hikari-cp.core        :as cp ]
               [next.jdbc             :as db ]
               [org.httpkit.server    :refer [
                   run-server
@@ -49,9 +50,12 @@
     ; Getting the SQLite database JDBC URL.
     (let [datasource-url (:sqlite.datasource.url settings)]
 
+    ; Making the HikariCP-based datasource.
+    (let [datasource (delay (cp/make-datasource {:jdbc-url datasource-url}))]
+
     ; Connecting to the database.
-    (reset! cnx (db/get-connection (db/get-datasource datasource-url)))
-    (-dbg (str (O-BRACKET) @cnx (C-BRACKET))))
+    (reset! cnx (db/get-connection (db/get-datasource @datasource)))
+    (-dbg (str (O-BRACKET) @cnx (C-BRACKET)))))
 
     ; Getting the port number used to run the http-kit web server.
     (let [server-port (-get-server-port settings)]
