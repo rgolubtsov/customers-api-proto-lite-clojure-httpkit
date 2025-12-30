@@ -51,11 +51,11 @@
     (let [datasource-url (:sqlite.datasource.url settings)]
 
     ; Making the HikariCP-based datasource.
-    (let [datasource (delay (cp/make-datasource {:jdbc-url datasource-url}))]
+    (reset! hds (cp/make-datasource {:jdbc-url datasource-url})))
 
     ; Connecting to the database.
-    (reset! cnx (db/get-connection (db/get-datasource @datasource)))
-    (-dbg (str (O-BRACKET) @cnx (C-BRACKET)))))
+    (reset! cnx (db/get-connection@hds))
+    (-dbg (str (O-BRACKET) @cnx (C-BRACKET)))
 
     ; Getting the port number used to run the http-kit web server.
     (let [server-port (-get-server-port settings)]

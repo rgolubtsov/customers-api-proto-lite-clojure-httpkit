@@ -13,7 +13,8 @@
 (ns customers.api-lite.helper "The helper namespace for the daemon."
     (:require [clojure.tools.logging :as l  ]
               [clojure.java.io       :as io ]
-              [clojure.edn           :as edn]))
+              [clojure.edn           :as edn]
+              [hikari-cp.core        :as cp ]))
 
 ; Helper constants.
 (defmacro EXIT-FAILURE []   1) ;    Failing exit status.
@@ -83,9 +84,10 @@
 (defmacro EMAIL-REGEX [] #".{1,63}@.{3,190}")
 
 ; Globals.
-(def s   "The Unix system logger."    (atom {}))
-(def dbg "The debug logging enabler." (atom {}))
-(def cnx "The database connection."   (atom {}))
+(def s   "The Unix system logger."        (atom {}))
+(def dbg "The debug logging enabler."     (atom {}))
+(def cnx "The database connection."       (atom {}))
+(def hds "The HikariCP-based datasource." (atom {}))
 
 ; Helper function. Used to get the daemon settings.
 (defn -get-settings [] (edn/read-string (slurp (io/resource (SETTINGS)))))
@@ -117,6 +119,7 @@
 ; Helper function. Makes final cleanups, closes streams, etc.
 (defn -cleanup []
     (.close@cnx)
+    (cp/close-datasource@hds)
 
     ; Closing the system logger.
     ; Calling <syslog.h> closelog();
