@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/core.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.2.4
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.5
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -17,6 +17,7 @@
     (:use     [customers.api-lite.helper    ]
               [customers.api-lite.controller])
     (:require [clojure.tools.logging :as l  ]
+              [hikari-cp.core        :as cp ]
               [next.jdbc             :as db ]
               [org.httpkit.server    :refer [
                   run-server
@@ -49,9 +50,12 @@
     ; Getting the SQLite database JDBC URL.
     (let [datasource-url (:sqlite.datasource.url settings)]
 
+    ; Making the HikariCP-based datasource.
+    (reset! hds (cp/make-datasource {:jdbc-url datasource-url})))
+
     ; Connecting to the database.
-    (reset! cnx (db/get-connection (db/get-datasource datasource-url)))
-    (-dbg (str (O-BRACKET) @cnx (C-BRACKET))))
+    (reset! cnx (db/get-connection@hds))
+    (-dbg (str (O-BRACKET) @cnx (C-BRACKET)))
 
     ; Getting the port number used to run the http-kit web server.
     (let [server-port (-get-server-port settings)]
