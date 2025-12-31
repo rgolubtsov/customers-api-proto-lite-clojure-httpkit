@@ -42,13 +42,13 @@
     (let [settings (-get-settings)]
 
     ; Identifying whether debug logging is enabled.
-    (reset! dbg (:logger.debug.enabled settings))
+    (reset! dbg (:logger-debug-enabled settings))
 
-    (let [daemon-name (:daemon.name settings)]
+    (let [daemon-name (:daemon-name settings)]
     (-dbg (str (O-BRACKET) daemon-name (C-BRACKET))))
 
     ; Getting the SQLite database JDBC URL.
-    (let [datasource-url (:sqlite.datasource.url settings)]
+    (let [datasource-url (:sqlite-datasource-url settings)]
 
     ; Making the HikariCP-based datasource.
     (reset! hds (cp/make-datasource {:jdbc-url datasource-url})))
