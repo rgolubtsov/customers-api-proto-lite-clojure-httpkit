@@ -95,7 +95,7 @@
 ; Helper function. Retrieves the port number used to run the http-kit
 ;                  web server, from daemon settings.
 (defn -get-server-port [settings]
-    (let [server-port (:server.port settings)]
+    (let [server-port (:server-port settings)]
 
     (if-not (nil? server-port)
         (cond
