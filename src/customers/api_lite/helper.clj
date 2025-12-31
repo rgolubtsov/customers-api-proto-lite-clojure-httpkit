@@ -21,6 +21,7 @@
 (defmacro EXIT-SUCCESS []   0) ; Successful exit status.
 (defmacro SPACE        [] " ")
 (defmacro SLASH        [] "/")
+(defmacro ANY          [] "*")
 (defmacro COLON        [] ":")
 (defmacro V-BAR        [] "|")
 (defmacro EQUALS       [] "=")
@@ -73,11 +74,14 @@
 (defmacro HTTP-201 [] 201)
 (defmacro HTTP-400 [] 400)
 (defmacro HTTP-404 [] 404)
+(defmacro HTTP-405 [] 405)
 
 ; HTTP response-related constants.
 (defmacro CONT-TYPE    [] "content-type"    )
 (defmacro MIME-TYPE    [] "application/json")
 (defmacro HDR-LOCATION [] "Location"        )
+(defmacro HDR-ALLOW    [] "Allow"           )
+(defmacro USED-METHODS [] "PUT, GET, HEAD"  )
 
 ; Regex patterns for contact phones and emails.
 (defmacro PHONE-REGEX [] #"^\+\d{9,14}"     )

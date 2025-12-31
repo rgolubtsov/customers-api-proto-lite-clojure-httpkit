@@ -26,8 +26,8 @@
               [compojure.core    :refer [
                   defroutes
                   context
-                  PUT
-                  GET
+                  PUT GET
+                  POST PATCH DELETE OPTIONS
               ]]
               [compojure.route   :refer [
                   not-found
@@ -404,6 +404,9 @@
     )))))
 )
 
+; Unused specific routes fall here - just to respond with HTTP 405.
+(defn ?405 [_] {:headers {(HDR-ALLOW) (USED-METHODS)} :status (HTTP-405)})
+
 ; -----------------------------------------------------------------------------
 
 (defroutes api-lite-routes
@@ -436,6 +439,11 @@
         (GET (str (SLASH) (COLON) (REST-CUST-ID)
                   (SLASH)         (REST-CONTACTS)
                   (SLASH) (COLON) (REST-CONT-TYPE)) [] list-contacts-by-type))
+
+    (POST    (str (SLASH) (ANY)) [] ?405)
+    (PATCH   (str (SLASH) (ANY)) [] ?405)
+    (DELETE  (str (SLASH) (ANY)) [] ?405)
+    (OPTIONS (str (SLASH) (ANY)) [] ?405)
 
     ; For any other route Compojure will automatically respond
     ; with the HTTP 404 Not Found status code.
