@@ -19,16 +19,16 @@
     }
     :dependencies [
         [org.clojure/clojure               "1.12.4"  ]
-        [org.clojure/tools.logging         "1.3.0"   ]
+        [org.clojure/tools.logging         "1.3.1"   ]
         [org.slf4j/slf4j-reload4j          "2.0.17"  ]
         [org.graylog2/syslog4j             "0.9.61"  ]
         [net.java.dev.jna/jna              "5.18.1"  ]
-        [com.github.seancorfield/next.jdbc "1.3.1086"]
-        [org.xerial/sqlite-jdbc            "3.51.1.0"]
-        [hikari-cp                         "3.3.0"   ]
+        [com.github.seancorfield/next.jdbc "1.3.1093"]
+        [org.xerial/sqlite-jdbc            "3.51.2.0"]
+        [hikari-cp                         "4.0.0"   ]
         [http-kit                          "2.8.1"   ]
         [compojure                         "1.7.2"   ]
-        [org.clojure/data.json             "2.5.1"   ]
+        [org.clojure/data.json             "2.5.2"   ]
     ]
     :main ^:skip-aot customers.api-lite.core
     :target-path     "target/%s"
