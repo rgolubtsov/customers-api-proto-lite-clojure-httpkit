@@ -419,9 +419,9 @@
     PUT /v1/customers
     PUT /v1/customers/contacts
     GET /v1/customers
-    GET /v1/customers/:customer_id
-    GET /v1/customers/:customer_id/contacts
-    GET /v1/customers/:customer_id/contacts/:contact_type
+    GET /v1/customers/{customer_id}
+    GET /v1/customers/{customer_id}/contacts
+    GET /v1/customers/{customer_id}/contacts/{contact_type}
     ```
 
     Accessing routes other than the above will likely end up in getting
