@@ -1,7 +1,7 @@
 ;
 ; src/customers/api_lite/controller.clj
 ; =============================================================================
-; Customers API Lite microservice prototype (Clojure port). Version 0.2.5
+; Customers API Lite microservice prototype (Clojure port). Version 0.2.6
 ; =============================================================================
 ; A daemon written in Clojure, designed and intended to be run
 ; as a microservice, implementing a special Customers API prototype
@@ -419,9 +419,9 @@
     PUT /v1/customers
     PUT /v1/customers/contacts
     GET /v1/customers
-    GET /v1/customers/:customer_id
-    GET /v1/customers/:customer_id/contacts
-    GET /v1/customers/:customer_id/contacts/:contact_type
+    GET /v1/customers/{customer_id}
+    GET /v1/customers/{customer_id}/contacts
+    GET /v1/customers/{customer_id}/contacts/{contact_type}
     ```
 
     Accessing routes other than the above will likely end up in getting

@@ -32,6 +32,7 @@ Surely, one may consider this project to be suitable for a wide variety of appli
 * **[Running](#running)**
 * **[Consuming](#consuming)**
   * **[Logging](#logging)**
+  * **[Error handling](#error-handling)**
 
 ## Building
 
@@ -58,7 +59,7 @@ $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
   DAEMON_NAME="customers-api-lite"; \
-  DMN_VERSION="0.2.5"; \
+  DMN_VERSION="0.2.6"; \
   SIMPLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}.jar"; \
   BUNDLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}-standalone.jar"; \
   rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR} && \
@@ -70,8 +71,8 @@ Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
 Compiling customers.api-lite.model
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.2.5.jar
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.2.5-standalone.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.2.6.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.2.6-standalone.jar
 ```
 
 Or **build** the microservice using **GNU Make** (optional, but for convenience &mdash; it covers the same **Leiningen** build workflow under the hood):
@@ -97,14 +98,14 @@ $ lein run; echo $?
 **Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task or GNU Make's `all` target:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.2.5.jar; echo $?
+$ java -jar target/uberjar/customers-api-lite-0.2.6.jar; echo $?
 ...
 ```
 
 To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.2.5.jar > /dev/null 2>&1 &
+$ java -jar target/uberjar/customers-api-lite-0.2.6.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 
@@ -115,12 +116,12 @@ The daemonized microservice then can be stopped gracefully at any time by issuin
 ```
 $ kill -SIGTERM <pid>
 $
-[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.2.5.jar > /dev/null 2>&1
+[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.2.6.jar > /dev/null 2>&1
 ```
 
 ## Consuming
 
-The microservice *should* expose **six REST API endpoints** to web clients... They are all intended to deal with customer entities and/or contact entities that belong to customer profiles. The following table displays their syntax:
+The microservice exposes **six REST API endpoints** to web clients. They are all intended to deal with customer entities and/or contact entities that belong to customer profiles. The following table displays their syntax:
 
 No. | Endpoint name                                      | Request method and REST URI                                   | Request body
 --: | -------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------
@@ -333,6 +334,26 @@ Dec 31 00:12:00 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:
+
+### Error handling
+
+When the URI path or request body passed in an incoming request contains inappropriate input, the microservice will respond with the **HTTP 400 Bad Request** status code, including a specific response body in JSON representation which may describe a possible cause of underlying client error, like the following:
+
+```
+$ curl http://localhost:8765/v1/customers/=qwerty4838=-i-.--089asdf..nj524987
+{"error":"HTTP 400 Bad Request: Request is malformed. Please check your inputs."}
+$
+$ curl http://localhost:8765/v1/customers/3....7/contacts
+{"error":"HTTP 400 Bad Request: Request is malformed. Please check your inputs."}
+$
+$ curl http://localhost:8765/v1/customers/--089asdf../contacts/email
+{"error":"HTTP 400 Bad Request: Request is malformed. Please check your inputs."}
+$
+$ curl -XPUT http://localhost:8765/v1/customers/contacts \
+       -H 'content-type: application/json' \
+       -d '{"customer_id":"3","contact":"12197654320--089asdf../nj524987"}'
+{"error":"HTTP 400 Bad Request: Request is malformed. Please check your inputs."}
+```
 
 ---
 
