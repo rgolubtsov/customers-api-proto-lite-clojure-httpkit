@@ -29,7 +29,10 @@ Surely, one may consider this project to be suitable for a wide variety of appli
 ## Table of Contents
 
 * **[Building](#building)**
+  * **[Creating a Docker image](#creating-a-docker-image)**
 * **[Running](#running)**
+  * **[Running a Docker image](#running-a-docker-image)**
+  * **[Exploring a Docker image payload](#exploring-a-docker-image-payload)**
 * **[Consuming](#consuming)**
   * **[Logging](#logging)**
   * **[Error handling](#error-handling)**
@@ -96,6 +99,19 @@ $ make all  # <== Building the daemon (executable JAR bundle).
 ...
 ```
 
+### Creating a Docker image
+
+**Build** a Docker image for the microservice:
+
+```
+$ # Pull the Azul Zulu JRE image first (based on Alpine Linux), if not already there:
+$ sudo docker pull azul/zulu-openjdk-alpine:21-jre-headless-latest
+...
+$ # Then build the microservice image:
+$ sudo docker build -tcustomersapi/api-lite-clj .
+...
+```
+
 ## Running
 
 **Run** the microservice using **Leiningen** (recompiling sources on-the-fly, if required):
@@ -128,6 +144,26 @@ $ kill -SIGTERM <pid>
 $
 [1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.2.6.jar > /dev/null 2>&1
 ```
+
+### Running a Docker image
+
+**Run** a Docker image of the microservice, deleting all stopped containers prior to that (if any):
+
+```
+$ sudo docker rm `sudo docker ps -aq`; \
+  export PORT=8765 && sudo docker run -dp${PORT}:${PORT} --name api-lite-clj customersapi/api-lite-clj; echo $?
+...
+```
+
+### Exploring a Docker image payload
+
+```
+$ sudo docker ps -a
+CONTAINER ID   IMAGE                       COMMAND                   CREATED              STATUS              PORTS                                         NAMES
+<container_id> customersapi/api-lite-clj   "java -jar api-lite..."   About a minute ago   Up About a minute   0.0.0.0:8765->8765/tcp, [::]:8765->8765/tcp   api-lite-clj
+```
+
+**TBD** :cd:
 
 ## Consuming
 
