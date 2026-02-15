@@ -157,13 +157,67 @@ $ sudo docker rm `sudo docker ps -aq`; \
 
 ### Exploring a Docker image payload
 
+The following is not necessary but might be considered somewhat interesting &mdash; to look into the running container and check out that the microservice's executable JAR bundle, logfile, and accompanied SQLite database are at their expected places and in effect:
+
 ```
 $ sudo docker ps -a
 CONTAINER ID   IMAGE                       COMMAND                   CREATED              STATUS              PORTS                                         NAMES
 <container_id> customersapi/api-lite-clj   "java -jar api-lite..."   About a minute ago   Up About a minute   0.0.0.0:8765->8765/tcp, [::]:8765->8765/tcp   api-lite-clj
-```
+$
+$ sudo docker exec -it api-lite-clj sh; echo $?
+/var/tmp/api-lite $
+/var/tmp/api-lite $ uname -a
+Linux <container_id> 6.8.0-100-generic #100-Ubuntu SMP PREEMPT_DYNAMIC Tue Jan 13 16:40:06 UTC 2026 x86_64 Linux
+/var/tmp/api-lite $
+/var/tmp/api-lite $ cat /etc/os-release /etc/alpine-release
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.20.9
+PRETTY_NAME="Alpine Linux v3.20"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
+3.20.9
+/var/tmp/api-lite $
+/var/tmp/api-lite $ java --version
+openjdk 21.0.10 2026-01-20 LTS
+OpenJDK Runtime Environment Zulu21.48+17-CA (build 21.0.10+7-LTS)
+OpenJDK 64-Bit Server VM Zulu21.48+17-CA (build 21.0.10+7-LTS, mixed mode, sharing)
+/var/tmp/api-lite $
+/var/tmp/api-lite $ ls -al
+total 26348
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 18:00 .
+drwxrwxrwt    1 root     root          4096 Feb 15 10:10 ..
+-rw-rw-r--    1 daemon   daemon    26949863 Feb 15 10:00 api-lite.jar
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 10:10 data
+drwxr-xr-x    2 daemon   daemon        4096 Feb 15 18:00 log
+/var/tmp/api-lite $
+/var/tmp/api-lite $ ls -al data/db/ log/
+data/db/:
+total 40
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 10:10 .
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 10:10 ..
+-rw-rw-r--    1 daemon   daemon       24576 Feb 15 09:40 customers-api-lite.db
 
-**TBD** :cd:
+log/:
+total 16
+drwxr-xr-x    2 daemon   daemon        4096 Feb 15 18:00 .
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 18:00 ..
+-rw-r--r--    1 daemon   daemon         454 Feb 15 18:00 customers-api-lite.log
+/var/tmp/api-lite $
+/var/tmp/api-lite $ netstat -plunt
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 :::8765                 :::*                    LISTEN      1/java
+/var/tmp/api-lite $
+/var/tmp/api-lite $ ps aux
+PID   USER     TIME  COMMAND
+    1 daemon    0:10 java -jar api-lite.jar
+   25 daemon    0:00 sh
+   48 daemon    0:00 ps aux
+/var/tmp/api-lite $
+/var/tmp/api-lite $ exit # Or simply <Ctrl-D>.
+0
+```
 
 ## Consuming
 
