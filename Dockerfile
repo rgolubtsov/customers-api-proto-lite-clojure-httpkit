@@ -1,7 +1,7 @@
 #
 # Dockerfile
 # =============================================================================
-# Customers API Lite microservice prototype (Clojure port). Version 0.2.6
+# Customers API Lite microservice prototype (Clojure port). Version 0.3.0
 # =============================================================================
 # A daemon written in Clojure, designed and intended to be run
 # as a microservice, implementing a special Customers API prototype
@@ -20,7 +20,7 @@
 FROM       azul/zulu-openjdk-alpine:21-jre-headless-latest
 USER       daemon
 WORKDIR    var/tmp
-COPY       target/uberjar/customers-api-lite-0.2.6.jar api-lite/api-lite.jar
+COPY       target/uberjar/customers-api-lite-0.3.0.jar api-lite/api-lite.jar
 COPY       data/db                                     api-lite/data/db/
 WORKDIR    api-lite
 USER       root
