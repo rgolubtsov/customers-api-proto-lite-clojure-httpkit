@@ -29,14 +29,27 @@ Surely, one may consider this project to be suitable for a wide variety of appli
 ## Table of Contents
 
 * **[Building](#building)**
+  * **[Creating a Docker image](#creating-a-docker-image)**
 * **[Running](#running)**
+  * **[Running a Docker image](#running-a-docker-image)**
+  * **[Exploring a Docker image payload](#exploring-a-docker-image-payload)**
 * **[Consuming](#consuming)**
   * **[Logging](#logging)**
   * **[Error handling](#error-handling)**
 
 ## Building
 
-The microservice might be built and run successfully under **Arch Linux** (proven). &mdash; First install the necessary dependencies (`jdk21-openjdk`, `leiningen`, `make`, `docker`):
+The microservice might be built and run successfully under **Ubuntu Server (Ubuntu 24.04.4 LTS x86-64)** and **Arch Linux** (both proven). &mdash; First install the necessary dependencies (`openjdk-21-jdk-headless`, `leiningen`, `make`, `docker.io`):
+
+* In Ubuntu Server:
+
+```
+$ sudo apt-get update && \
+  sudo apt-get install openjdk-21-jdk-headless leiningen make docker.io -y
+...
+```
+
+* In Arch Linux:
 
 ```
 $ sudo pacman -Syu jdk21-openjdk leiningen make docker
@@ -59,7 +72,7 @@ $
 $ lein uberjar && \
   UBERJAR_DIR="target/uberjar"; \
   DAEMON_NAME="customers-api-lite"; \
-  DMN_VERSION="0.2.6"; \
+  DMN_VERSION="0.3.0"; \
   SIMPLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}.jar"; \
   BUNDLE_JAR="${UBERJAR_DIR}/${DAEMON_NAME}-${DMN_VERSION}-standalone.jar"; \
   rm ${SIMPLE_JAR} && mv ${BUNDLE_JAR} ${SIMPLE_JAR} && \
@@ -71,8 +84,8 @@ Compiling customers.api-lite.controller
 Compiling customers.api-lite.core
 Compiling customers.api-lite.helper
 Compiling customers.api-lite.model
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.2.6.jar
-Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.2.6-standalone.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.3.0.jar
+Created $HOME/customers-api-proto-lite-clojure-httpkit/target/uberjar/customers-api-lite-0.3.0-standalone.jar
 ```
 
 Or **build** the microservice using **GNU Make** (optional, but for convenience &mdash; it covers the same **Leiningen** build workflow under the hood):
@@ -83,6 +96,19 @@ $ make clean
 $ make      # <== Compilation only phase (JVM classes).
 ...
 $ make all  # <== Building the daemon (executable JAR bundle).
+...
+```
+
+### Creating a Docker image
+
+**Build** a Docker image for the microservice:
+
+```
+$ # Pull the Azul Zulu JRE image first (based on Alpine Linux), if not already there:
+$ sudo docker pull azul/zulu-openjdk-alpine:21-jre-headless-latest
+...
+$ # Then build the microservice image:
+$ sudo docker build -tcustomersapi/api-lite-clj .
 ...
 ```
 
@@ -98,14 +124,14 @@ $ lein run; echo $?
 **Run** the microservice using its all-in-one JAR bundle, built previously by the `uberjar` Leiningen task or GNU Make's `all` target:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.2.6.jar; echo $?
+$ java -jar target/uberjar/customers-api-lite-0.3.0.jar; echo $?
 ...
 ```
 
 To run the microservice as a *true* daemon, i.e. in the background, redirecting all the console output to `/dev/null`, the following form of invocation of its executable JAR bundle can be used:
 
 ```
-$ java -jar target/uberjar/customers-api-lite-0.2.6.jar > /dev/null 2>&1 &
+$ java -jar target/uberjar/customers-api-lite-0.3.0.jar > /dev/null 2>&1 &
 [1] <pid>
 ```
 
@@ -116,7 +142,89 @@ The daemonized microservice then can be stopped gracefully at any time by issuin
 ```
 $ kill -SIGTERM <pid>
 $
-[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.2.6.jar > /dev/null 2>&1
+[1]+  Exit 143                java -jar target/uberjar/customers-api-lite-0.3.0.jar > /dev/null 2>&1
+```
+
+### Running a Docker image
+
+**Run** a Docker image of the microservice, deleting all stopped containers prior to that (if any):
+
+```
+$ sudo docker rm `sudo docker ps -aq`; \
+  export PORT=8765 && sudo docker run -dp${PORT}:${PORT} --name api-lite-clj customersapi/api-lite-clj; echo $?
+...
+```
+
+### Exploring a Docker image payload
+
+The following is not necessary but might be considered somewhat interesting &mdash; to look into the running container and check out that the microservice's executable JAR bundle, logfile, and accompanied SQLite database are at their expected places and in effect:
+
+```
+$ sudo docker ps -a
+CONTAINER ID   IMAGE                       COMMAND                   CREATED              STATUS              PORTS                                         NAMES
+<container_id> customersapi/api-lite-clj   "java -jar api-lite..."   About a minute ago   Up About a minute   0.0.0.0:8765->8765/tcp, [::]:8765->8765/tcp   api-lite-clj
+$
+$ sudo docker exec -it api-lite-clj sh; echo $?
+/var/tmp/api-lite $
+/var/tmp/api-lite $ uname -a
+Linux <container_id> 6.8.0-100-generic #100-Ubuntu SMP PREEMPT_DYNAMIC Tue Jan 13 16:40:06 UTC 2026 x86_64 Linux
+/var/tmp/api-lite $
+/var/tmp/api-lite $ cat /etc/os-release /etc/alpine-release
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.20.9
+PRETTY_NAME="Alpine Linux v3.20"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
+3.20.9
+/var/tmp/api-lite $
+/var/tmp/api-lite $ java --version
+openjdk 21.0.10 2026-01-20 LTS
+OpenJDK Runtime Environment Zulu21.48+17-CA (build 21.0.10+7-LTS)
+OpenJDK 64-Bit Server VM Zulu21.48+17-CA (build 21.0.10+7-LTS, mixed mode, sharing)
+/var/tmp/api-lite $
+/var/tmp/api-lite $ ls -al
+total 26348
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 18:00 .
+drwxrwxrwt    1 root     root          4096 Feb 15 10:10 ..
+-rw-rw-r--    1 daemon   daemon    26949863 Feb 15 10:00 api-lite.jar
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 10:10 data
+drwxr-xr-x    2 daemon   daemon        4096 Feb 15 18:00 log
+/var/tmp/api-lite $
+/var/tmp/api-lite $ ls -al data/db/ log/
+data/db/:
+total 40
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 10:10 .
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 10:10 ..
+-rw-rw-r--    1 daemon   daemon       24576 Feb 15 09:40 customers-api-lite.db
+
+log/:
+total 16
+drwxr-xr-x    2 daemon   daemon        4096 Feb 15 18:00 .
+drwxr-xr-x    1 daemon   daemon        4096 Feb 15 18:00 ..
+-rw-r--r--    1 daemon   daemon         454 Feb 15 18:00 customers-api-lite.log
+/var/tmp/api-lite $
+/var/tmp/api-lite $ netstat -plunt
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 :::8765                 :::*                    LISTEN      1/java
+/var/tmp/api-lite $
+/var/tmp/api-lite $ ps aux
+PID   USER     TIME  COMMAND
+    1 daemon    0:10 java -jar api-lite.jar
+   25 daemon    0:00 sh
+   48 daemon    0:00 ps aux
+/var/tmp/api-lite $
+/var/tmp/api-lite $ exit # Or simply <Ctrl-D>.
+0
+```
+
+To stop a running container of the microservice gracefully at any time, simply issue the following command:
+
+```
+$ sudo docker stop api-lite-clj; echo $?
+api-lite-clj
+0
 ```
 
 ## Consuming
@@ -285,28 +393,28 @@ The microservice has the ability to log messages to a logfile and to the Unix sy
 
 ```
 $ tail -f log/customers-api-lite.log
-[2025-12-31][00:10:00] [DEBUG] [Customers API Lite]
-[2025-12-31][00:10:00] [INFO ] HikariPool-1 - Starting...
-[2025-12-31][00:10:00] [INFO ] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@56a09a5c
-[2025-12-31][00:10:00] [INFO ] HikariPool-1 - Start completed.
-[2025-12-31][00:10:00] [DEBUG] [HikariProxyConnection@1198265211 wrapping org.sqlite.jdbc4.JDBC4Connection@56a09a5c]
-[2025-12-31][00:10:00] [INFO ] Server started on port 8765
-[2025-12-31][00:10:30] [DEBUG] [PUT]
-[2025-12-31][00:10:30] [DEBUG] [Saturday Sunday]
-[2025-12-31][00:10:30] [DEBUG] [5|Saturday Sunday]
-[2025-12-31][00:10:50] [DEBUG] [PUT]
-[2025-12-31][00:10:50] [DEBUG] customer_id=5
-[2025-12-31][00:10:50] [DEBUG] [Saturday.Sunday@example.com]
-[2025-12-31][00:10:50] [DEBUG] [email|Saturday.Sunday@example.com]
-[2025-12-31][00:11:10] [DEBUG] [GET]
-[2025-12-31][00:11:10] [DEBUG] customer_id=5
-[2025-12-31][00:11:10] [DEBUG] [5|Saturday Sunday]
-[2025-12-31][00:11:40] [DEBUG] [GET]
-[2025-12-31][00:11:40] [DEBUG] customer_id=5 | contact_type=email
-[2025-12-31][00:11:40] [DEBUG] [Saturday.Sunday@example.com]
-[2025-12-31][00:12:00] [INFO ] Server stopped
-[2025-12-31][00:12:00] [INFO ] HikariPool-1 - Shutdown initiated...
-[2025-12-31][00:12:00] [INFO ] HikariPool-1 - Shutdown completed.
+[2026-02-15][15:10:00] [DEBUG] [Customers API Lite]
+[2026-02-15][15:10:00] [INFO ] HikariPool-1 - Starting...
+[2026-02-15][15:10:00] [INFO ] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@7109b603
+[2026-02-15][15:10:00] [INFO ] HikariPool-1 - Start completed.
+[2026-02-15][15:10:00] [DEBUG] [HikariProxyConnection@1040733616 wrapping org.sqlite.jdbc4.JDBC4Connection@7109b603]
+[2026-02-15][15:10:00] [INFO ] Server started on port 8765
+[2026-02-15][15:10:30] [DEBUG] [PUT]
+[2026-02-15][15:10:30] [DEBUG] [Saturday Sunday]
+[2026-02-15][15:10:30] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][15:10:50] [DEBUG] [PUT]
+[2026-02-15][15:10:50] [DEBUG] customer_id=5
+[2026-02-15][15:10:50] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][15:10:50] [DEBUG] [email|Saturday.Sunday@example.com]
+[2026-02-15][15:11:10] [DEBUG] [GET]
+[2026-02-15][15:11:10] [DEBUG] customer_id=5
+[2026-02-15][15:11:10] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][15:11:40] [DEBUG] [GET]
+[2026-02-15][15:11:40] [DEBUG] customer_id=5 | contact_type=email
+[2026-02-15][15:11:40] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][15:12:00] [INFO ] Server stopped
+[2026-02-15][15:12:00] [INFO ] HikariPool-1 - Shutdown initiated...
+[2026-02-15][15:12:00] [INFO ] HikariPool-1 - Shutdown completed.
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -314,26 +422,77 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Dec 31 00:10:00 <hostname> java[<pid>]: [Customers API Lite]
-Dec 31 00:10:00 <hostname> java[<pid>]: [HikariProxyConnection@1198265211 wrapping org.sqlite.jdbc4.JDBC4Connection@56a09a5c]
-Dec 31 00:10:00 <hostname> java[<pid>]: Server started on port 8765
-Dec 31 00:10:30 <hostname> java[<pid>]: [PUT]
-Dec 31 00:10:30 <hostname> java[<pid>]: [Saturday Sunday]
-Dec 31 00:10:30 <hostname> java[<pid>]: [5|Saturday Sunday]
-Dec 31 00:10:50 <hostname> java[<pid>]: [PUT]
-Dec 31 00:10:50 <hostname> java[<pid>]: customer_id=5
-Dec 31 00:10:50 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
-Dec 31 00:10:50 <hostname> java[<pid>]: [email|Saturday.Sunday@example.com]
-Dec 31 00:11:10 <hostname> java[<pid>]: [GET]
-Dec 31 00:11:10 <hostname> java[<pid>]: customer_id=5
-Dec 31 00:11:10 <hostname> java[<pid>]: [5|Saturday Sunday]
-Dec 31 00:11:40 <hostname> java[<pid>]: [GET]
-Dec 31 00:11:40 <hostname> java[<pid>]: customer_id=5 | contact_type=email
-Dec 31 00:11:40 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
-Dec 31 00:12:00 <hostname> java[<pid>]: Server stopped
+Feb 15 15:10:00 <hostname> java[<pid>]: [Customers API Lite]
+Feb 15 15:10:00 <hostname> java[<pid>]: [HikariProxyConnection@1040733616 wrapping org.sqlite.jdbc4.JDBC4Connection@7109b603]
+Feb 15 15:10:00 <hostname> java[<pid>]: Server started on port 8765
+Feb 15 15:10:30 <hostname> java[<pid>]: [PUT]
+Feb 15 15:10:30 <hostname> java[<pid>]: [Saturday Sunday]
+Feb 15 15:10:30 <hostname> java[<pid>]: [5|Saturday Sunday]
+Feb 15 15:10:50 <hostname> java[<pid>]: [PUT]
+Feb 15 15:10:50 <hostname> java[<pid>]: customer_id=5
+Feb 15 15:10:50 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
+Feb 15 15:10:50 <hostname> java[<pid>]: [email|Saturday.Sunday@example.com]
+Feb 15 15:11:10 <hostname> java[<pid>]: [GET]
+Feb 15 15:11:10 <hostname> java[<pid>]: customer_id=5
+Feb 15 15:11:10 <hostname> java[<pid>]: [5|Saturday Sunday]
+Feb 15 15:11:40 <hostname> java[<pid>]: [GET]
+Feb 15 15:11:40 <hostname> java[<pid>]: customer_id=5 | contact_type=email
+Feb 15 15:11:40 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
+Feb 15 15:12:00 <hostname> java[<pid>]: Server stopped
 ```
 
-**TBD** :cd:
+Inside the running container logs might be queried also by `tail`ing the `log/customers-api-lite.log` logfile:
+
+```
+/var/tmp/api-lite $ tail -f log/customers-api-lite.log
+[2026-02-15][18:00:15] [DEBUG] [Customers API Lite]
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Starting...
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@50bb1c1f
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Start completed.
+[2026-02-15][18:00:15] [DEBUG] [HikariProxyConnection@1540140763 wrapping org.sqlite.jdbc4.JDBC4Connection@50bb1c1f]
+[2026-02-15][18:00:15] [INFO ] Server started on port 8765
+[2026-02-15][18:10:20] [DEBUG] [PUT]
+[2026-02-15][18:10:20] [DEBUG] [Saturday Sunday]
+[2026-02-15][18:10:20] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][18:10:25] [DEBUG] [PUT]
+[2026-02-15][18:10:25] [DEBUG] customer_id=5
+[2026-02-15][18:10:25] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][18:10:25] [DEBUG] [email|Saturday.Sunday@example.com]
+[2026-02-15][18:10:30] [DEBUG] [GET]
+[2026-02-15][18:10:30] [DEBUG] customer_id=5
+[2026-02-15][18:10:30] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][18:10:35] [DEBUG] [GET]
+[2026-02-15][18:10:35] [DEBUG] customer_id=5 | contact_type=email
+[2026-02-15][18:10:35] [DEBUG] [Saturday.Sunday@example.com]
+```
+
+And of course, Docker itself gives the possibility to read log messages by using the corresponding command for that:
+
+```
+$ sudo docker logs -f api-lite-clj
+[2026-02-15][18:00:15] [DEBUG] [Customers API Lite]
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Starting...
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@50bb1c1f
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Start completed.
+[2026-02-15][18:00:15] [DEBUG] [HikariProxyConnection@1540140763 wrapping org.sqlite.jdbc4.JDBC4Connection@50bb1c1f]
+[2026-02-15][18:00:15] [INFO ] Server started on port 8765
+[2026-02-15][18:10:20] [DEBUG] [PUT]
+[2026-02-15][18:10:20] [DEBUG] [Saturday Sunday]
+[2026-02-15][18:10:20] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][18:10:25] [DEBUG] [PUT]
+[2026-02-15][18:10:25] [DEBUG] customer_id=5
+[2026-02-15][18:10:25] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][18:10:25] [DEBUG] [email|Saturday.Sunday@example.com]
+[2026-02-15][18:10:30] [DEBUG] [GET]
+[2026-02-15][18:10:30] [DEBUG] customer_id=5
+[2026-02-15][18:10:30] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][18:10:35] [DEBUG] [GET]
+[2026-02-15][18:10:35] [DEBUG] customer_id=5 | contact_type=email
+[2026-02-15][18:10:35] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][18:20:40] [INFO ] Server stopped
+[2026-02-15][18:20:40] [INFO ] HikariPool-1 - Shutdown initiated...
+[2026-02-15][18:20:40] [INFO ] HikariPool-1 - Shutdown completed.
+```
 
 ### Error handling
 
