@@ -433,7 +433,58 @@ Feb 15 15:11:40 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
 Feb 15 15:12:00 <hostname> java[<pid>]: Server stopped
 ```
 
-**TBD** :cd:
+Inside the running container logs might be queried also by `tail`ing the `log/customers-api-lite.log` logfile:
+
+```
+/var/tmp/api-lite $ tail -f log/customers-api-lite.log
+[2026-02-15][18:00:15] [DEBUG] [Customers API Lite]
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Starting...
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@50bb1c1f
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Start completed.
+[2026-02-15][18:00:15] [DEBUG] [HikariProxyConnection@1540140763 wrapping org.sqlite.jdbc4.JDBC4Connection@50bb1c1f]
+[2026-02-15][18:00:15] [INFO ] Server started on port 8765
+[2026-02-15][18:10:20] [DEBUG] [PUT]
+[2026-02-15][18:10:20] [DEBUG] [Saturday Sunday]
+[2026-02-15][18:10:20] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][18:10:25] [DEBUG] [PUT]
+[2026-02-15][18:10:25] [DEBUG] customer_id=5
+[2026-02-15][18:10:25] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][18:10:25] [DEBUG] [email|Saturday.Sunday@example.com]
+[2026-02-15][18:10:30] [DEBUG] [GET]
+[2026-02-15][18:10:30] [DEBUG] customer_id=5
+[2026-02-15][18:10:30] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][18:10:35] [DEBUG] [GET]
+[2026-02-15][18:10:35] [DEBUG] customer_id=5 | contact_type=email
+[2026-02-15][18:10:35] [DEBUG] [Saturday.Sunday@example.com]
+```
+
+And of course, Docker itself gives the possibility to read log messages by using the corresponding command for that:
+
+```
+$ sudo docker logs -f api-lite-clj
+[2026-02-15][18:00:15] [DEBUG] [Customers API Lite]
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Starting...
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@50bb1c1f
+[2026-02-15][18:00:15] [INFO ] HikariPool-1 - Start completed.
+[2026-02-15][18:00:15] [DEBUG] [HikariProxyConnection@1540140763 wrapping org.sqlite.jdbc4.JDBC4Connection@50bb1c1f]
+[2026-02-15][18:00:15] [INFO ] Server started on port 8765
+[2026-02-15][18:10:20] [DEBUG] [PUT]
+[2026-02-15][18:10:20] [DEBUG] [Saturday Sunday]
+[2026-02-15][18:10:20] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][18:10:25] [DEBUG] [PUT]
+[2026-02-15][18:10:25] [DEBUG] customer_id=5
+[2026-02-15][18:10:25] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][18:10:25] [DEBUG] [email|Saturday.Sunday@example.com]
+[2026-02-15][18:10:30] [DEBUG] [GET]
+[2026-02-15][18:10:30] [DEBUG] customer_id=5
+[2026-02-15][18:10:30] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][18:10:35] [DEBUG] [GET]
+[2026-02-15][18:10:35] [DEBUG] customer_id=5 | contact_type=email
+[2026-02-15][18:10:35] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][18:20:40] [INFO ] Server stopped
+[2026-02-15][18:20:40] [INFO ] HikariPool-1 - Shutdown initiated...
+[2026-02-15][18:20:40] [INFO ] HikariPool-1 - Shutdown completed.
+```
 
 ### Error handling
 
