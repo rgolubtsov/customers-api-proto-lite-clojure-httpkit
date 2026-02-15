@@ -331,28 +331,28 @@ The microservice has the ability to log messages to a logfile and to the Unix sy
 
 ```
 $ tail -f log/customers-api-lite.log
-[2026-02-13][15:10:00] [DEBUG] [Customers API Lite]
-[2026-02-13][15:10:00] [INFO ] HikariPool-1 - Starting...
-[2026-02-13][15:10:00] [INFO ] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@7981963f
-[2026-02-13][15:10:00] [INFO ] HikariPool-1 - Start completed.
-[2026-02-13][15:10:00] [DEBUG] [HikariProxyConnection@401366570 wrapping org.sqlite.jdbc4.JDBC4Connection@7981963f]
-[2026-02-13][15:10:00] [INFO ] Server started on port 8765
-[2026-02-13][15:10:30] [DEBUG] [PUT]
-[2026-02-13][15:10:30] [DEBUG] [Saturday Sunday]
-[2026-02-13][15:10:30] [DEBUG] [5|Saturday Sunday]
-[2026-02-13][15:10:50] [DEBUG] [PUT]
-[2026-02-13][15:10:50] [DEBUG] customer_id=5
-[2026-02-13][15:10:50] [DEBUG] [Saturday.Sunday@example.com]
-[2026-02-13][15:10:50] [DEBUG] [email|Saturday.Sunday@example.com]
-[2026-02-13][15:11:10] [DEBUG] [GET]
-[2026-02-13][15:11:10] [DEBUG] customer_id=5
-[2026-02-13][15:11:10] [DEBUG] [5|Saturday Sunday]
-[2026-02-13][15:11:40] [DEBUG] [GET]
-[2026-02-13][15:11:40] [DEBUG] customer_id=5 | contact_type=email
-[2026-02-13][15:11:40] [DEBUG] [Saturday.Sunday@example.com]
-[2026-02-13][15:12:00] [INFO ] Server stopped
-[2026-02-13][15:12:00] [INFO ] HikariPool-1 - Shutdown initiated...
-[2026-02-13][15:12:00] [INFO ] HikariPool-1 - Shutdown completed.
+[2026-02-15][15:10:00] [DEBUG] [Customers API Lite]
+[2026-02-15][15:10:00] [INFO ] HikariPool-1 - Starting...
+[2026-02-15][15:10:00] [INFO ] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@7109b603
+[2026-02-15][15:10:00] [INFO ] HikariPool-1 - Start completed.
+[2026-02-15][15:10:00] [DEBUG] [HikariProxyConnection@1040733616 wrapping org.sqlite.jdbc4.JDBC4Connection@7109b603]
+[2026-02-15][15:10:00] [INFO ] Server started on port 8765
+[2026-02-15][15:10:30] [DEBUG] [PUT]
+[2026-02-15][15:10:30] [DEBUG] [Saturday Sunday]
+[2026-02-15][15:10:30] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][15:10:50] [DEBUG] [PUT]
+[2026-02-15][15:10:50] [DEBUG] customer_id=5
+[2026-02-15][15:10:50] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][15:10:50] [DEBUG] [email|Saturday.Sunday@example.com]
+[2026-02-15][15:11:10] [DEBUG] [GET]
+[2026-02-15][15:11:10] [DEBUG] customer_id=5
+[2026-02-15][15:11:10] [DEBUG] [5|Saturday Sunday]
+[2026-02-15][15:11:40] [DEBUG] [GET]
+[2026-02-15][15:11:40] [DEBUG] customer_id=5 | contact_type=email
+[2026-02-15][15:11:40] [DEBUG] [Saturday.Sunday@example.com]
+[2026-02-15][15:12:00] [INFO ] Server stopped
+[2026-02-15][15:12:00] [INFO ] HikariPool-1 - Shutdown initiated...
+[2026-02-15][15:12:00] [INFO ] HikariPool-1 - Shutdown completed.
 ```
 
 Messages registered by the Unix system logger can be seen and analyzed using the `journalctl` utility:
@@ -360,23 +360,23 @@ Messages registered by the Unix system logger can be seen and analyzed using the
 ```
 $ journalctl -f
 ...
-Feb 13 15:10:00 <hostname> java[<pid>]: [Customers API Lite]
-Feb 13 15:10:00 <hostname> java[<pid>]: [HikariProxyConnection@401366570 wrapping org.sqlite.jdbc4.JDBC4Connection@7981963f]
-Feb 13 15:10:00 <hostname> java[<pid>]: Server started on port 8765
-Feb 13 15:10:30 <hostname> java[<pid>]: [PUT]
-Feb 13 15:10:30 <hostname> java[<pid>]: [Saturday Sunday]
-Feb 13 15:10:30 <hostname> java[<pid>]: [5|Saturday Sunday]
-Feb 13 15:10:50 <hostname> java[<pid>]: [PUT]
-Feb 13 15:10:50 <hostname> java[<pid>]: customer_id=5
-Feb 13 15:10:50 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
-Feb 13 15:10:50 <hostname> java[<pid>]: [email|Saturday.Sunday@example.com]
-Feb 13 15:11:10 <hostname> java[<pid>]: [GET]
-Feb 13 15:11:10 <hostname> java[<pid>]: customer_id=5
-Feb 13 15:11:10 <hostname> java[<pid>]: [5|Saturday Sunday]
-Feb 13 15:11:40 <hostname> java[<pid>]: [GET]
-Feb 13 15:11:40 <hostname> java[<pid>]: customer_id=5 | contact_type=email
-Feb 13 15:11:40 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
-Feb 13 15:12:00 <hostname> java[<pid>]: Server stopped
+Feb 15 15:10:00 <hostname> java[<pid>]: [Customers API Lite]
+Feb 15 15:10:00 <hostname> java[<pid>]: [HikariProxyConnection@1040733616 wrapping org.sqlite.jdbc4.JDBC4Connection@7109b603]
+Feb 15 15:10:00 <hostname> java[<pid>]: Server started on port 8765
+Feb 15 15:10:30 <hostname> java[<pid>]: [PUT]
+Feb 15 15:10:30 <hostname> java[<pid>]: [Saturday Sunday]
+Feb 15 15:10:30 <hostname> java[<pid>]: [5|Saturday Sunday]
+Feb 15 15:10:50 <hostname> java[<pid>]: [PUT]
+Feb 15 15:10:50 <hostname> java[<pid>]: customer_id=5
+Feb 15 15:10:50 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
+Feb 15 15:10:50 <hostname> java[<pid>]: [email|Saturday.Sunday@example.com]
+Feb 15 15:11:10 <hostname> java[<pid>]: [GET]
+Feb 15 15:11:10 <hostname> java[<pid>]: customer_id=5
+Feb 15 15:11:10 <hostname> java[<pid>]: [5|Saturday Sunday]
+Feb 15 15:11:40 <hostname> java[<pid>]: [GET]
+Feb 15 15:11:40 <hostname> java[<pid>]: customer_id=5 | contact_type=email
+Feb 15 15:11:40 <hostname> java[<pid>]: [Saturday.Sunday@example.com]
+Feb 15 15:12:00 <hostname> java[<pid>]: Server stopped
 ```
 
 **TBD** :cd:
