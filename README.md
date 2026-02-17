@@ -389,7 +389,7 @@ $ curl -v http://localhost:8765/v1/customers/3/contacts/email
 
 ### Logging
 
-The microservice has the ability to log messages to a logfile and to the Unix syslog facility. To enable debug logging, the `:logger.debug.enabled` setting in the microservice main config file `etc/settings.conf` should be set to `true` *before building the microservice*. When running under Arch Linux (not in a Docker container), logs can be seen and analyzed in an ordinary fashion, by `tail`ing the `log/customers-api-lite.log` logfile:
+The microservice has the ability to log messages to a logfile and to the Unix syslog facility. To enable debug logging, the `:logger.debug.enabled` setting in the microservice main config file `etc/settings.conf` should be set to `true` *before building the microservice*. When running under Ubuntu Server or Arch Linux (not in a Docker container), logs can be seen and analyzed in an ordinary fashion, by `tail`ing the `log/customers-api-lite.log` logfile:
 
 ```
 $ tail -f log/customers-api-lite.log
